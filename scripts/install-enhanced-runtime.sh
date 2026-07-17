@@ -31,6 +31,11 @@ if [ "$HOT" = "true" ]; then
     cp "$SOURCE/assets/$file" "$INSTALL_ROOT/assets/$file"
     chmod 600 "$INSTALL_ROOT/assets/$file"
   done
+  if [ ! -f "$INSTALL_ROOT/scripts/injector.mjs.apex-original" ]; then
+    cp "$INSTALL_ROOT/scripts/injector.mjs" "$INSTALL_ROOT/scripts/injector.mjs.apex-original"
+  fi
+  cp "$SOURCE/scripts/injector.mjs" "$INSTALL_ROOT/scripts/injector.mjs"
+  chmod 600 "$INSTALL_ROOT/scripts/injector.mjs"
   printf 'Apex Motion runtime hot-installed at %s\n' "$INSTALL_ROOT"
   exit 0
 fi

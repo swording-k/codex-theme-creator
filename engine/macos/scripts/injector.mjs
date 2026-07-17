@@ -335,6 +335,13 @@ async function loadTheme(themeDir) {
     }
     return value;
   };
+  const boolean = (value, name) => {
+    if (value === undefined) return undefined;
+    if (typeof value !== "boolean") {
+      throw new Error(`${configPath} has an invalid ${name} field`);
+    }
+    return value;
+  };
   const rawColors = raw.colors && typeof raw.colors === "object" && !Array.isArray(raw.colors)
     ? raw.colors : null;
   const colorKeys = [
@@ -351,6 +358,17 @@ async function loadTheme(themeDir) {
     focusY: unit(rawArt.focusY, "art.focusY"),
     safeArea: choice(rawArt.safeArea, "art.safeArea", ["auto", "left", "right", "center", "none"]),
     taskMode: choice(rawArt.taskMode, "art.taskMode", ["auto", "ambient", "banner", "off"]),
+  };
+  if (raw.motion !== undefined && (!raw.motion || typeof raw.motion !== "object" || Array.isArray(raw.motion))) {
+    throw new Error(`${configPath} has an invalid motion field`);
+  }
+  const rawMotion = raw.motion || {};
+  const motion = {
+    profile: choice(rawMotion.profile, "motion.profile", ["gt-broadcast", "rainforest", "alpine"]),
+    intensity: unit(rawMotion.intensity, "motion.intensity"),
+    rain: boolean(rawMotion.rain, "motion.rain"),
+    signalLights: boolean(rawMotion.signalLights, "motion.signalLights"),
+    telemetry: boolean(rawMotion.telemetry, "motion.telemetry"),
   };
   const theme = {
     schemaVersion: 1,
@@ -381,6 +399,9 @@ async function loadTheme(themeDir) {
   if (appearance !== undefined) theme.appearance = appearance;
   if (Object.values(art).some((value) => value !== undefined)) {
     theme.art = Object.fromEntries(Object.entries(art).filter(([, value]) => value !== undefined));
+  }
+  if (Object.values(motion).some((value) => value !== undefined)) {
+    theme.motion = Object.fromEntries(Object.entries(motion).filter(([, value]) => value !== undefined));
   }
   const requestedImagePath = path.join(assetsRoot, theme.image);
   let imagePath;
@@ -880,6 +901,7 @@ if (path.resolve(process.argv[1] || "") === path.resolve(scriptPath)) {
         imageBytes: loaded.imageBytes,
         payloadBytes: Buffer.byteLength(loaded.payload),
         artMetadata: loaded.theme.artMetadata ?? null,
+        motion: loaded.theme.motion ?? null,
         timings: loaded.timings,
       }, null, 2));
     } else if (options.mode === "watch") await runWatch(options);
