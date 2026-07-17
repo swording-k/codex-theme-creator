@@ -656,6 +656,11 @@
         </div>
         <div class="dream-skin-status"><i></i><span></span></div>
         <div class="dream-skin-quote"></div>
+        <div class="dream-skin-decorations" aria-hidden="true">
+          <div data-decoration-slot="home-top"></div>
+          <div data-decoration-slot="home-bottom"></div>
+          <div data-decoration-slot="shell-corners"></div>
+        </div>
         <div class="dream-skin-particles"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
         <div class="dream-skin-orbit"></div>`;
       document.body.appendChild(chrome);
@@ -669,12 +674,26 @@
         subtitle: chrome.querySelector(".dream-skin-brand small"),
         status: chrome.querySelector(".dream-skin-status span"),
         quote: chrome.querySelector(".dream-skin-quote"),
+        decorationSlots: new Map([
+          ["home-top", chrome.querySelector('[data-decoration-slot="home-top"]')],
+          ["home-bottom", chrome.querySelector('[data-decoration-slot="home-bottom"]')],
+          ["shell-corners", chrome.querySelector('[data-decoration-slot="shell-corners"]')],
+        ]),
       };
     }
     setTextContent(chromeParts.name, THEME.name || "Codex Dream Skin");
     setTextContent(chromeParts.subtitle, THEME.brandSubtitle || "CODEX DREAM SKIN");
     setTextContent(chromeParts.status, THEME.statusText || "DREAM SKIN ONLINE");
     setTextContent(chromeParts.quote, THEME.quote || "MAKE SOMETHING WONDERFUL");
+    for (const target of chromeParts.decorationSlots.values()) setTextContent(target, "");
+    for (const decoration of DECORATIONS) {
+      if (!decoration || decoration.interactive !== false) continue;
+      if (!["masthead", "status-strip", "corner-frame"].includes(decoration.type)) continue;
+      const target = chromeParts.decorationSlots.get(decoration.slot);
+      const decorationText = typeof decoration.text === "string"
+        ? Array.from(decoration.text.trim()).slice(0, 80).join("") : "";
+      if (target && decorationText) setTextContent(target, decorationText);
+    }
     if (layout || created) {
       metrics.layoutReads += 1;
       const shellBox = shellMain.getBoundingClientRect();

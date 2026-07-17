@@ -61,5 +61,22 @@ assert.match(
   /data-dream-ui-profile="gt-control"\]\[data-dream-shell="dark"\][\s\S]*--ds-gt-sidebar:/,
   "GT profile should define an explicit dark sidebar material.",
 );
+assert.match(renderer, /dream-skin-decorations/, "renderer should own one decoration container.");
+assert.match(renderer, /setAttribute\("aria-hidden", "true"\)/, "decorations should be hidden from accessibility APIs.");
+assert.match(
+  renderer,
+  /DECORATIONS[\s\S]*textContent/,
+  "theme decoration text should be assigned as text, never interpreted as markup.",
+);
+assert.match(
+  css,
+  /\.dream-skin-decorations\s*\{[\s\S]*?pointer-events:\s*none/,
+  "decoration container must not intercept clicks.",
+);
+assert.match(
+  css,
+  /\.dream-skin-decorations \*\s*\{[\s\S]*?pointer-events:\s*none/,
+  "decoration descendants must not intercept clicks.",
+);
 
 console.log("PASS: renderer maps and cleans complete UI profile state.");
