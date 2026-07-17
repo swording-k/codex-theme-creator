@@ -9,3 +9,9 @@ dream-skin/**/*-draft*
 # Local archives.
 release/
 *.zip
+
+# Private branded variants for personal use only.
+private-themes/
+
+# Local visual brainstorming sessions.
+.superpowers/
