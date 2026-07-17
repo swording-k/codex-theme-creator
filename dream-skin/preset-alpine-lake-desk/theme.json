@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "preset-alpine-lake-desk",
+  "name": "雪湖工作台",
+  "brandSubtitle": "CODEX DREAM SKIN",
+  "tagline": "面对湖泊和雪山，进入清澈的深度工作。",
+  "projectPrefix": "选择项目 · ",
+  "projectLabel": "◉  选择项目",
+  "statusText": "DEEP WORK ONLINE",
+  "quote": "CLEAR MIND, CLEAR CODE",
+  "image": "background.jpg",
+  "appearance": "light",
+  "art": {
+    "focusX": 0.73,
+    "focusY": 0.43,
+    "safeArea": "left",
+    "taskMode": "ambient"
+  },
+  "colors": {
+    "background": "#edf3f4",
+    "panel": "#ffffff",
+    "panelAlt": "#e7eef1",
+    "accent": "#4f7f9f",
+    "accentAlt": "#6fa6c5",
+    "secondary": "#b58b63",
+    "highlight": "#d59b55",
+    "text": "#1f2b34",
+    "muted": "#60717b",
+    "line": "rgba(79, 127, 159, .22)"
+  }
+}

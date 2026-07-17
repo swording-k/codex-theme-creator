@@ -94,3 +94,7 @@ node /path/to/Codex-Dream-Skin/macos/scripts/injector.mjs \
 - 背景图没有版权风险、肖像风险或商标风险。
 - 在 Codex 里真实切换后，标题、对话内容、输入框都能看清。
 - GitHub README 里的预览图和安装命令是最新的。
+
+## 动态主题
+
+当前上游主题契约主要是 `theme.json` + PNG/JPEG/WebP 图片。动态效果请先看 [`docs/MOTION_THEMES.md`](./MOTION_THEMES.md)，不要默认把 GIF/MP4 当作可发布主题素材。

@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "preset-rainforest-focus",
+  "name": "雨林专注",
+  "brandSubtitle": "CODEX DREAM SKIN",
+  "tagline": "让雨声和森林，把注意力慢慢收回来。",
+  "projectPrefix": "选择项目 · ",
+  "projectLabel": "◉  选择项目",
+  "statusText": "FOCUS MODE ONLINE",
+  "quote": "CODE WITH THE RAIN",
+  "image": "background.jpg",
+  "appearance": "light",
+  "art": {
+    "focusX": 0.72,
+    "focusY": 0.44,
+    "safeArea": "left",
+    "taskMode": "ambient"
+  },
+  "colors": {
+    "background": "#dce7df",
+    "panel": "#f3f6f1",
+    "panelAlt": "#e8eee7",
+    "accent": "#4f7f52",
+    "accentAlt": "#6fa76c",
+    "secondary": "#b4864f",
+    "highlight": "#d7a65d",
+    "text": "#1b2620",
+    "muted": "#5c6d63",
+    "line": "rgba(79, 127, 82, .22)"
+  }
+}

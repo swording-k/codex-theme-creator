@@ -10,10 +10,19 @@
 | 主题 | 风格 | 目录 |
 | --- | --- | --- |
 | 铁律训练场 | 高端商业力量区 / 健身房 | [`dream-skin/preset-iron-discipline`](./dream-skin/preset-iron-discipline/) |
+| Apex Pit | 原创 GT 赛道维修区 | [`dream-skin/preset-apex-pit`](./dream-skin/preset-apex-pit/) |
+| 雨林专注 | 雨中森林 / 写代码氛围 | [`dream-skin/preset-rainforest-focus`](./dream-skin/preset-rainforest-focus/) |
+| 雪湖工作台 | 湖泊雪山 / 写代码氛围 | [`dream-skin/preset-alpine-lake-desk`](./dream-skin/preset-alpine-lake-desk/) |
 
 ## 预览
 
 ![铁律训练场](./dream-skin/preset-iron-discipline/preview.png)
+
+![Apex Pit](./dream-skin/preset-apex-pit/preview.png)
+
+![雨林专注](./dream-skin/preset-rainforest-focus/preview.png)
+
+![雪湖工作台](./dream-skin/preset-alpine-lake-desk/preview.png)
 
 ## 如何使用
 
