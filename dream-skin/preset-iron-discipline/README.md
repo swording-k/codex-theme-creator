@@ -22,7 +22,7 @@
 如果已经安装 Codex Dream Skin，可将本目录复制到主题库：
 
 ```bash
-cp -R /Users/baojian/Desktop/codex-skins/dream-skin/preset-iron-discipline \
+cp -R /path/to/codex-theme-creator/dream-skin/preset-iron-discipline \
   "$HOME/Library/Application Support/CodexDreamSkinStudio/themes/"
 ```
 

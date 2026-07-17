@@ -3,7 +3,7 @@
 `dream-skin/preset-*` 中随仓库提交的原创或 AI 辅助生成主题图片，除各主题 README 另有说明外，采用
 [Creative Commons Attribution 4.0 International](https://creativecommons.org/licenses/by/4.0/) 许可。
 
-你可以分享、修改和用于商业项目，但应注明来源为 `codex-skins contributors`，并说明是否做过修改。
+你可以分享、修改和用于商业项目，但应注明来源为 `codex-theme-creator contributors`，并说明是否做过修改。
 
 以下内容不在这项素材许可中：
 

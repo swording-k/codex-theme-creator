@@ -85,7 +85,7 @@ Return only the opaque edge-to-edge wallpaper.
 ```bash
 node /path/to/Codex-Dream-Skin/macos/scripts/injector.mjs \
   --check-payload \
-  --theme-dir /path/to/codex-skins/dream-skin/preset-<slug>
+  --theme-dir /path/to/codex-theme-creator/dream-skin/preset-<slug>
 ```
 
 还要人工检查：
