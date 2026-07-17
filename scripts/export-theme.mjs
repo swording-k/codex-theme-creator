@@ -78,7 +78,11 @@ export async function exportTheme(themeDirectory, outputDirectory) {
     if (!(await fs.stat(path.join(packageRoot, "README.md")).catch(() => null))) {
       await fs.writeFile(path.join(packageRoot, "README.md"), generatedReadme(theme), { mode: 0o600 });
     }
-    execFileSync("/usr/bin/ditto", ["-c", "-k", "--sequesterRsrc", "--keepParent", packageRoot, archive]);
+    execFileSync("/usr/bin/ditto", [
+      "-c", "-k", "--keepParent",
+      "--norsrc", "--noextattr", "--noqtn", "--noacl",
+      packageRoot, archive,
+    ]);
     return { archive, themeId: theme.id };
   } finally {
     await fs.rm(temporary, { recursive: true, force: true });

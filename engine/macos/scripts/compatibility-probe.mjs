@@ -24,6 +24,12 @@ export function selectCodexTarget(targets) {
     ?? null;
 }
 
+export function routeIsSettled(live) {
+  if (live?.route === "home") return Number(live.counts?.projectSelector) > 0;
+  if (live?.route === "task") return Number(live.counts?.transcript) > 0;
+  return false;
+}
+
 function argument(args, name, fallback) {
   const index = args.indexOf(`--${name}`);
   return index >= 0 && args[index + 1] ? args[index + 1] : fallback;
@@ -70,7 +76,7 @@ export async function probeCodex(endpoint = "http://127.0.0.1:9341") {
   const targets = await response.json();
   const target = selectCodexTarget(targets);
   if (!target?.webSocketDebuggerUrl) throw new Error("No Codex page target was found");
-  const live = await cdpEvaluate(target.webSocketDebuggerUrl, `(() => {
+  const expression = `(() => {
     const count = (selector) => document.querySelectorAll(selector).length;
     const state = window.__CODEX_DREAM_SKIN_STATE__ || {};
     return {
@@ -89,7 +95,13 @@ export async function probeCodex(endpoint = "http://127.0.0.1:9341") {
       uiProfile: document.documentElement.getAttribute('data-dream-ui-profile'),
       url: location.href
     };
-  })()`);
+  })()`;
+  let live;
+  for (let attempt = 0; attempt < 4; attempt += 1) {
+    live = await cdpEvaluate(target.webSocketDebuggerUrl, expression);
+    if (routeIsSettled(live)) break;
+    await new Promise((resolve) => setTimeout(resolve, 400));
+  }
   const expectedOptional = live.route === "home" ? ["projectSelector"] : ["transcript"];
   return { ...live, ...gradeProbe(live.counts, { expectedOptional }), targetUrl: target.url };
 }

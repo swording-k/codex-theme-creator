@@ -44,6 +44,7 @@ try {
   assert.match(entries, /theme-export-fixture\/preview-task\.png/);
   assert.match(entries, /theme-export-fixture\/README\.md/);
   assert.doesNotMatch(entries, /secret\.txt/);
+  assert.doesNotMatch(entries, /__MACOSX|\/\._/, "release ZIP should not contain macOS metadata");
 
   const unpacked = path.join(root, "unpacked");
   await fs.mkdir(unpacked);

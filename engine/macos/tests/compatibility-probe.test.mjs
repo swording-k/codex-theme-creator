@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 
-import { gradeProbe, selectCodexTarget } from "../scripts/compatibility-probe.mjs";
+import { gradeProbe, routeIsSettled, selectCodexTarget } from "../scripts/compatibility-probe.mjs";
 
 const probeSource = await fs.readFile(fileURLToPath(new URL("../scripts/compatibility-probe.mjs", import.meta.url)), "utf8");
 assert.match(
@@ -38,5 +38,9 @@ assert.equal(
   ]).id,
   "main",
 );
+assert.equal(routeIsSettled({ route: "task", counts: { transcript: 0 } }), false);
+assert.equal(routeIsSettled({ route: "task", counts: { transcript: 2 } }), true);
+assert.equal(routeIsSettled({ route: "home", counts: { projectSelector: 0 } }), false);
+assert.equal(routeIsSettled({ route: "home", counts: { projectSelector: 1 } }), true);
 
 console.log("PASS: compatibility probe grades critical and optional capabilities.");
