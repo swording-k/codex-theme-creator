@@ -28,6 +28,26 @@
 
 主题需要配合上游项目 Codex Dream Skin 使用。推荐先安装 Codex Dream Skin，再把本仓库里的主题复制到它的主题库。
 
+### Apex Motion 增强运行时
+
+本仓库同时维护一个基于上游 macOS 版本的增强运行时，增加可配置的动态雨线、信号灯、遥测扫光，以及首页/已有对话分别优化的可读性规则。完整源码和上游许可证位于 `engine/macos/`。
+
+首次安装需要先关闭 Codex：
+
+```bash
+./scripts/install-enhanced-runtime.sh
+```
+
+如果已经安装 Dream Skin，只想在当前会话更新增强资源，可以热更新后重新切换主题：
+
+```bash
+./scripts/install-enhanced-runtime.sh --hot
+~/.codex/codex-dream-skin-studio/scripts/switch-theme-macos.sh \
+  --id <theme-id>
+```
+
+热更新只修改 `~/.codex/codex-dream-skin-studio/assets/`，首次执行会保存 `.apex-original` 备份，不修改 Codex 应用程序或签名。
+
 ### 1. 安装 Codex Dream Skin
 
 ```bash
