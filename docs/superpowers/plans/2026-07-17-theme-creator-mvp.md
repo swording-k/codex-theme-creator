@@ -33,7 +33,7 @@
 - Create: `engine/macos/scripts/compile-theme.mjs`
 - Modify: `engine/macos/tests/run-tests.sh`
 
-- [ ] **Step 1: Write the failing compiler tests**
+- [x] **Step 1: Write the failing compiler tests**
 
 Test a valid source with `ui.profile = "gt-control"`, route surfaces, one status-strip decoration, and no arbitrary CSS/JS. Test rejection of an unknown UI profile, a decoration with `interactive: true`, and an asset path escaping the theme directory.
 
@@ -45,13 +45,13 @@ assert.equal(compiled.decorations[0].interactive, false);
 await assert.rejects(() => compileTheme(unsafeSource, dir), /interactive decorations are forbidden/);
 ```
 
-- [ ] **Step 2: Run the compiler test and verify RED**
+- [x] **Step 2: Run the compiler test and verify RED**
 
 Run: `node engine/macos/tests/theme-compiler.test.mjs`
 
 Expected: failure because `compile-theme.mjs` does not exist.
 
-- [ ] **Step 3: Implement the bounded compiler**
+- [x] **Step 3: Implement the bounded compiler**
 
 Export `compileTheme(source, themeDir)` and support only these first-release values:
 
@@ -63,13 +63,13 @@ const DECORATION_TYPES = new Set(["masthead", "status-strip", "corner-frame"]);
 
 Validate six-digit colors, opacity values from `0` to `1`, contained asset filenames, non-interactive decorations, and local-only assets. The CLI accepts `--source`, `--theme-dir`, and `--output`.
 
-- [ ] **Step 4: Run the compiler test and full suite**
+- [x] **Step 4: Run the compiler test and full suite**
 
 Run: `node engine/macos/tests/theme-compiler.test.mjs && engine/macos/tests/run-tests.sh`
 
 Expected: all tests pass.
 
-- [ ] **Step 5: Commit compiler work**
+- [x] **Step 5: Commit compiler work**
 
 ```bash
 git add engine/macos/scripts/compile-theme.mjs engine/macos/tests/theme-compiler.test.mjs engine/macos/tests/run-tests.sh
@@ -83,7 +83,7 @@ git commit -m "Add bounded theme profile compiler"
 - Modify: `engine/macos/assets/renderer-inject.js`
 - Modify: `engine/macos/tests/run-tests.sh`
 
-- [ ] **Step 1: Write failing renderer contract tests**
+- [x] **Step 1: Write failing renderer contract tests**
 
 Require schema-v2 payloads to map to root state and to clean stale state on theme changes:
 
@@ -95,13 +95,13 @@ assert.match(source, /data-dream-decoration-profile/);
 assert.match(source, /removeAttribute/);
 ```
 
-- [ ] **Step 2: Run the renderer contract test and verify RED**
+- [x] **Step 2: Run the renderer contract test and verify RED**
 
 Run: `node engine/macos/tests/ui-theme.test.mjs`
 
 Expected: failure for missing `data-dream-ui-profile`.
 
-- [ ] **Step 3: Implement UI state mapping**
+- [x] **Step 3: Implement UI state mapping**
 
 Map validated payload fields to:
 
@@ -118,13 +118,13 @@ data-dream-decoration-profile
 
 Unknown or absent values resolve to `native`, readable route defaults, and no decoration profile. Add every attribute and property to existing cleanup lists.
 
-- [ ] **Step 4: Run targeted and full tests**
+- [x] **Step 4: Run targeted and full tests**
 
 Run: `node engine/macos/tests/ui-theme.test.mjs && engine/macos/tests/run-tests.sh`
 
 Expected: all tests pass.
 
-- [ ] **Step 5: Commit renderer contract work**
+- [x] **Step 5: Commit renderer contract work**
 
 ```bash
 git add engine/macos/assets/renderer-inject.js engine/macos/tests/ui-theme.test.mjs engine/macos/tests/run-tests.sh
@@ -137,7 +137,7 @@ git commit -m "Map complete UI profiles into the renderer"
 - Modify: `engine/macos/tests/ui-theme.test.mjs`
 - Modify: `engine/macos/assets/dream-skin.css`
 
-- [ ] **Step 1: Add failing CSS capability assertions**
+- [x] **Step 1: Add failing CSS capability assertions**
 
 Assert that `gt-control` has explicit rules for the sidebar, selected and hover rows, suggestion cards, project selector, composer, task transcript, dialogs, nested foreground inheritance, focus-visible state, responsive bounds, and task-route surface.
 
@@ -151,23 +151,23 @@ for (const capability of [
 ]) assert.match(css, new RegExp(capability.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
 ```
 
-- [ ] **Step 2: Run the UI test and verify RED**
+- [x] **Step 2: Run the UI test and verify RED**
 
 Run: `node engine/macos/tests/ui-theme.test.mjs`
 
 Expected: failure for missing GT profile selectors.
 
-- [ ] **Step 3: Implement the GT profile CSS**
+- [x] **Step 3: Implement the GT profile CSS**
 
 Use a charcoal smoked-glass sidebar, orange active indicator, restrained white typography, 6px card radius, explicit nested foreground colors, compact telemetry details, and separate home/task opacity. Keep native content and layout intact. Avoid continuous motion in this task.
 
-- [ ] **Step 4: Run targeted and full tests**
+- [x] **Step 4: Run targeted and full tests**
 
 Run: `node engine/macos/tests/ui-theme.test.mjs && engine/macos/tests/run-tests.sh`
 
 Expected: all tests pass.
 
-- [ ] **Step 5: Commit the GT UI profile**
+- [x] **Step 5: Commit the GT UI profile**
 
 ```bash
 git add engine/macos/assets/dream-skin.css engine/macos/tests/ui-theme.test.mjs
@@ -181,7 +181,7 @@ git commit -m "Add complete GT control room skin"
 - Modify: `engine/macos/assets/renderer-inject.js`
 - Modify: `engine/macos/assets/dream-skin.css`
 
-- [ ] **Step 1: Add failing decoration-safety tests**
+- [x] **Step 1: Add failing decoration-safety tests**
 
 Require one runtime-owned container, cleanup on profile removal, `aria-hidden="true"`, and `pointer-events: none` on the container and descendants.
 
@@ -192,23 +192,23 @@ assert.match(css, /\.dream-skin-decorations[\s\S]*pointer-events:\s*none/);
 assert.match(css, /\.dream-skin-decorations \*[\s\S]*pointer-events:\s*none/);
 ```
 
-- [ ] **Step 2: Run the UI test and verify RED**
+- [x] **Step 2: Run the UI test and verify RED**
 
 Run: `node engine/macos/tests/ui-theme.test.mjs`
 
 Expected: failure for missing decoration container.
 
-- [ ] **Step 3: Implement bounded GT decorations**
+- [x] **Step 3: Implement bounded GT decorations**
 
 Render only compiler-approved `masthead`, `status-strip`, and `corner-frame` elements. Use theme-owned text from the payload, text length limits, `textContent`, `aria-hidden`, no event listeners, no links, and no raw HTML. Hide decorations on compact viewports when their declared slot is unavailable.
 
-- [ ] **Step 4: Run targeted and full tests**
+- [x] **Step 4: Run targeted and full tests**
 
 Run: `node engine/macos/tests/ui-theme.test.mjs && engine/macos/tests/run-tests.sh`
 
 Expected: all tests pass.
 
-- [ ] **Step 5: Commit decoration work**
+- [x] **Step 5: Commit decoration work**
 
 ```bash
 git add engine/macos/assets/renderer-inject.js engine/macos/assets/dream-skin.css engine/macos/tests/ui-theme.test.mjs
@@ -222,7 +222,7 @@ git commit -m "Add safe theme decoration slots"
 - Create: `engine/macos/scripts/compatibility-probe.mjs`
 - Modify: `engine/macos/tests/run-tests.sh`
 
-- [ ] **Step 1: Write failing probe grading tests**
+- [x] **Step 1: Write failing probe grading tests**
 
 ```js
 assert.equal(gradeProbe({ sidebar: 1, composer: 1, shell: 1 }).status, "compatible");
@@ -230,23 +230,23 @@ assert.equal(gradeProbe({ sidebar: 0, composer: 1, shell: 1 }).status, "incompat
 assert.equal(gradeProbe({ sidebar: 1, composer: 1, shell: 1, cards: 0 }).status, "degraded");
 ```
 
-- [ ] **Step 2: Run the probe test and verify RED**
+- [x] **Step 2: Run the probe test and verify RED**
 
 Run: `node engine/macos/tests/compatibility-probe.test.mjs`
 
 Expected: failure because the probe module does not exist.
 
-- [ ] **Step 3: Implement probe grading and CDP CLI**
+- [x] **Step 3: Implement probe grading and CDP CLI**
 
 Treat `shell`, `sidebar`, and `composer` as critical. Treat home cards, project selector, transcript, and dialogs as optional. Print JSON containing counts, `compatible|degraded|incompatible`, Codex target URL, active theme ID, and runtime version.
 
-- [ ] **Step 4: Run targeted and full tests**
+- [x] **Step 4: Run targeted and full tests**
 
 Run: `node engine/macos/tests/compatibility-probe.test.mjs && engine/macos/tests/run-tests.sh`
 
 Expected: all tests pass without requiring a running Codex instance for unit tests.
 
-- [ ] **Step 5: Commit probe work**
+- [x] **Step 5: Commit probe work**
 
 ```bash
 git add engine/macos/scripts/compatibility-probe.mjs engine/macos/tests/compatibility-probe.test.mjs engine/macos/tests/run-tests.sh
@@ -261,27 +261,27 @@ git commit -m "Add Codex runtime compatibility probe"
 - Create: `skills/codex-theme-creator/SKILL.md`
 - Create: `scripts/install-theme-creator.sh`
 
-- [ ] **Step 1: Write the failing preparation test**
+- [x] **Step 1: Write the failing preparation test**
 
 Test that concise design input creates `source-theme.json`, `provenance.json`, and prompt files with a contained background filename, schema version 2, inferred theme slug, and no remote assets.
 
-- [ ] **Step 2: Run the preparation test and verify RED**
+- [x] **Step 2: Run the preparation test and verify RED**
 
 Run: `node skills/codex-theme-creator/tests/prepare-theme.test.mjs`
 
 Expected: failure because `prepare-theme.mjs` does not exist.
 
-- [ ] **Step 3: Implement deterministic preparation and Skill workflow**
+- [x] **Step 3: Implement deterministic preparation and Skill workflow**
 
 The Skill documents four visible states: preparing, designing, applying, and verifying. It accepts optional references, uses the installed image generation skill for normal visual generation, calls compiler and payload validation scripts, requests permission before any Codex restart, limits automatic visual repair to two passes, and reports created/installed/active/verified separately.
 
-- [ ] **Step 4: Test the Skill scripts and installer syntax**
+- [x] **Step 4: Test the Skill scripts and installer syntax**
 
 Run: `node skills/codex-theme-creator/tests/prepare-theme.test.mjs && bash -n scripts/install-theme-creator.sh`
 
 Expected: tests pass and shell syntax is valid.
 
-- [ ] **Step 5: Commit the Skill**
+- [x] **Step 5: Commit the Skill**
 
 ```bash
 git add skills/codex-theme-creator scripts/install-theme-creator.sh
@@ -295,7 +295,7 @@ git commit -m "Add Codex theme creator skill"
 - Modify: `private-themes/porsche-gt3rs/theme.json`
 - Modify: `README.md`
 
-- [ ] **Step 1: Compile and validate the private flagship package**
+- [x] **Step 1: Compile and validate the private flagship package**
 
 Run:
 
@@ -310,13 +310,13 @@ node engine/macos/scripts/injector.mjs --check-payload \
 
 Expected: both commands succeed and the payload reports schema version 2 with `ui.profile = gt-control`.
 
-- [ ] **Step 2: Run the complete automated suite**
+- [x] **Step 2: Run the complete automated suite**
 
 Run: `engine/macos/tests/run-tests.sh`
 
 Expected: every compiler, renderer, shell, payload, and compatibility unit test passes.
 
-- [ ] **Step 3: Hot-install the runtime and activate the theme**
+- [x] **Step 3: Hot-install the runtime and activate the theme**
 
 Run:
 
@@ -331,11 +331,11 @@ cp private-themes/porsche-gt3rs/theme.json \
 
 Expected: installed theme files match the package and the switch command reports the expected ID. Do not restart or close Codex without explicit user permission.
 
-- [ ] **Step 4: Probe and capture real Codex routes**
+- [x] **Step 4: Probe and capture real Codex routes**
 
 Run the compatibility probe against local CDP, capture a new-chat screenshot and an existing-task screenshot, and save them as `preview-home.png` and `preview-task.png`. Verify active ID, critical capability coverage, readable cards, readable sidebar rows, visible background, visible task text, and unobstructed composer controls.
 
-- [ ] **Step 5: Update Chinese-first README and commit public code**
+- [x] **Step 5: Update Chinese-first README and commit public code**
 
 Document repository purpose, one-command installation, the prompt-based creation flow, package format, evidence states, restoration, and current macOS limitation. Keep ignored branded assets out of git.
 
@@ -343,3 +343,13 @@ Document repository purpose, one-command installation, the prompt-based creation
 git add README.md
 git commit -m "Document prompt driven Codex theme creation"
 ```
+
+## Final QA Record
+
+- Automated macOS runtime suite: passed on 2026-07-17.
+- Skill preparation tests and official Skill validator: passed.
+- Live New Chat probe: `compatible`, active theme `private-porsche-gt3rs`, profile `gt-control`.
+- Live existing-task probe: `compatible`, active theme `private-porsche-gt3rs`, profile `gt-control`.
+- Real screenshots captured for both routes; private screenshots remain ignored because they contain local project data.
+- Public Apex Pit ZIP was exported, inspected for hidden metadata, unpacked, and payload-validated as schema v2.
+- No Codex restart or application-bundle modification was performed.
