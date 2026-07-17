@@ -46,6 +46,7 @@ fi
 "$NODE" "$ROOT/tests/image-metadata.test.mjs"
 "$NODE" "$ROOT/tests/theme-compiler.test.mjs"
 "$NODE" "$ROOT/tests/compatibility-probe.test.mjs"
+"$NODE" "$ROOT/tests/enhanced-runtime-install.test.mjs"
 "$NODE" "$ROOT/tests/injector-bootstrap.test.mjs"
 "$NODE" "$ROOT/tests/motion-theme.test.mjs"
 "$NODE" "$ROOT/tests/ui-theme.test.mjs"
