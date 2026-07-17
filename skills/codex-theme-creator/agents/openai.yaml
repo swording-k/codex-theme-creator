@@ -1,0 +1,4 @@
+interface:
+  display_name: "Codex Theme Creator"
+  short_description: "Create and verify complete Codex Desktop themes"
+  default_prompt: "Create a complete Codex theme from my idea or reference image, install it, and verify the real interface."
