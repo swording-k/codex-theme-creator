@@ -56,6 +56,25 @@ try {
   assert.deepEqual(await fs.readFile(path.join(stage, "background-a.png")), stagedBeforeMutation);
   assert.equal(JSON.parse(await fs.readFile(path.join(stage, "theme.json"), "utf8")).name, "A");
 
+  const sourceV2 = path.join(tempRoot, "themes", "theme-v2");
+  const stageV2 = path.join(tempRoot, "stage-v2");
+  await fs.mkdir(sourceV2, { recursive: true });
+  await fs.mkdir(stageV2);
+  await fs.copyFile(fixtureAsset, path.join(sourceV2, "background.png"));
+  await fs.writeFile(
+    path.join(sourceV2, "theme.json"),
+    `${JSON.stringify({
+      schemaVersion: 2,
+      id: "theme-v2",
+      image: "background.png",
+      ui: { profile: "gt-control" },
+    })}\n`,
+  );
+  assert.equal(await runStage(sourceV2, stageV2), "background.png");
+  const stagedV2 = JSON.parse(await fs.readFile(path.join(stageV2, "theme.json"), "utf8"));
+  assert.equal(stagedV2.schemaVersion, 2);
+  assert.equal(stagedV2.ui.profile, "gt-control");
+
   const outside = path.join(tempRoot, "outside.png");
   await fs.copyFile(fixtureAsset, outside);
   const traversal = path.join(tempRoot, "traversal");
