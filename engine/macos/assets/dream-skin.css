@@ -1335,6 +1335,80 @@ html.codex-dream-skin[data-dream-ui-profile="gt-control"] :focus-visible {
   outline-offset: 2px !important;
 }
 
+html.codex-dream-skin[data-dream-ui-profile="glass-studio"] aside.app-shell-left-panel {
+  background: linear-gradient(180deg,
+    rgb(var(--ds-panel-rgb) / .64),
+    rgb(var(--ds-bg-rgb) / .52)) !important;
+  border-color: rgb(var(--ds-text-rgb) / .14) !important;
+  border-radius: 0 var(--ds-ui-radius, 8px) var(--ds-ui-radius, 8px) 0 !important;
+  box-shadow: 10px 0 34px rgb(var(--ds-bg-rgb) / .20) !important;
+  backdrop-filter: blur(24px) saturate(118%) !important;
+}
+
+html.codex-dream-skin[data-dream-ui-profile="glass-studio"] aside.app-shell-left-panel [class~="bg-token-list-hover-background"],
+html.codex-dream-skin[data-dream-ui-profile="glass-studio"] aside.app-shell-left-panel [aria-current="page"] {
+  background: rgb(var(--ds-panel-2-rgb) / .58) !important;
+  border: 1px solid rgb(var(--ds-accent-rgb) / .32) !important;
+  box-shadow: inset 2px 0 0 var(--ds-accent) !important;
+}
+
+html.codex-dream-skin[data-dream-ui-profile="glass-studio"] .group\/home-suggestions button,
+html.codex-dream-skin[data-dream-ui-profile="glass-studio"] .composer-surface-chrome,
+html.codex-dream-skin[data-dream-ui-profile="glass-studio"][data-dream-task-surface="glass-readable"] main.main-surface:not(.dream-skin-home-shell) article {
+  color: var(--ds-text) !important;
+  background: rgb(var(--ds-panel-rgb) / .66) !important;
+  border: 1px solid rgb(var(--ds-text-rgb) / .16) !important;
+  border-radius: var(--ds-ui-radius, 8px) !important;
+  box-shadow: 0 16px 36px rgb(var(--ds-bg-rgb) / .20) !important;
+  backdrop-filter: blur(22px) saturate(112%) !important;
+}
+
+html.codex-dream-skin[data-dream-ui-profile="glass-studio"] .group\/home-suggestions button *,
+html.codex-dream-skin[data-dream-ui-profile="glass-studio"] .composer-surface-chrome button * {
+  color: currentColor !important;
+}
+
+html.codex-dream-skin[data-dream-ui-profile="glass-studio"] :focus-visible {
+  outline: 2px solid rgb(var(--ds-accent-rgb) / .78) !important;
+  outline-offset: 2px !important;
+}
+
+html.codex-dream-skin[data-dream-ui-profile="editorial"] aside.app-shell-left-panel {
+  background: rgb(var(--ds-panel-rgb) / .90) !important;
+  border-color: rgb(var(--ds-accent-rgb) / .22) !important;
+  border-radius: 0 var(--ds-ui-radius, 8px) var(--ds-ui-radius, 8px) 0 !important;
+  box-shadow: 8px 0 28px rgb(var(--ds-bg-rgb) / .16) !important;
+  backdrop-filter: blur(14px) saturate(106%) !important;
+}
+
+html.codex-dream-skin[data-dream-ui-profile="editorial"] aside.app-shell-left-panel [class~="bg-token-list-hover-background"],
+html.codex-dream-skin[data-dream-ui-profile="editorial"] aside.app-shell-left-panel [aria-current="page"] {
+  background: rgb(var(--ds-accent-rgb) / .12) !important;
+  border: 1px solid rgb(var(--ds-accent-rgb) / .30) !important;
+  box-shadow: inset 0 -2px 0 var(--ds-accent) !important;
+}
+
+html.codex-dream-skin[data-dream-ui-profile="editorial"] .group\/home-suggestions button,
+html.codex-dream-skin[data-dream-ui-profile="editorial"] .composer-surface-chrome,
+html.codex-dream-skin[data-dream-ui-profile="editorial"][data-dream-task-surface="solid-readable"] main.main-surface:not(.dream-skin-home-shell) article {
+  color: var(--ds-text) !important;
+  background: rgb(var(--ds-panel-rgb) / .90) !important;
+  border: 1px solid rgb(var(--ds-accent-rgb) / .22) !important;
+  border-radius: var(--ds-ui-radius, 8px) !important;
+  box-shadow: 0 10px 28px rgb(var(--ds-bg-rgb) / .14) !important;
+  backdrop-filter: blur(12px) saturate(104%) !important;
+}
+
+html.codex-dream-skin[data-dream-ui-profile="editorial"] .group\/home-suggestions button *,
+html.codex-dream-skin[data-dream-ui-profile="editorial"] .composer-surface-chrome button * {
+  color: currentColor !important;
+}
+
+html.codex-dream-skin[data-dream-ui-profile="editorial"] :focus-visible {
+  outline: 2px solid rgb(var(--ds-accent-rgb) / .72) !important;
+  outline-offset: 2px !important;
+}
+
 .dream-skin-decorations * {
   pointer-events: none !important;
   user-select: none !important;

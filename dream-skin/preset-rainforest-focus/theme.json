@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "id": "preset-rainforest-focus",
   "name": "雨林专注",
   "brandSubtitle": "CODEX DREAM SKIN",
@@ -27,5 +27,18 @@
     "text": "#1b2620",
     "muted": "#5c6d63",
     "line": "rgba(79, 127, 82, .22)"
-  }
+  },
+  "ui": {
+    "profile": "glass-studio",
+    "density": "comfortable",
+    "radius": 8,
+    "routes": {
+      "home": { "surface": "transparent", "opacity": 0.4 },
+      "task": { "surface": "glass-readable", "opacity": 0.82 }
+    }
+  },
+  "decorations": [
+    { "type": "masthead", "slot": "home-top", "text": "RAINFOREST FOCUS / DEEP WORK", "interactive": false },
+    { "type": "corner-frame", "slot": "shell-corners", "text": "", "interactive": false }
+  ]
 }

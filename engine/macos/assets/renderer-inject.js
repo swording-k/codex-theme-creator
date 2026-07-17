@@ -376,7 +376,7 @@
   };
 
   const applyUi = (root) => {
-    const profiles = new Set(["native", "gt-control"]);
+    const profiles = new Set(["native", "gt-control", "glass-studio", "editorial"]);
     const surfaces = new Set(["transparent", "smoked", "glass-readable", "solid-readable"]);
     const profile = profiles.has(UI.profile) ? UI.profile : "native";
     const density = UI.density === "compact" ? "compact" : "comfortable";

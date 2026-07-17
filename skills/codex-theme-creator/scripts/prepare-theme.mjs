@@ -21,6 +21,57 @@ function slugify(value) {
   return slug || `custom-${Date.now()}`;
 }
 
+const PROFILES = new Set(["gt-control", "glass-studio", "editorial"]);
+
+function inferProfile(idea, requested) {
+  if (requested !== undefined) {
+    if (!PROFILES.has(requested)) throw new Error(`unsupported UI profile: ${requested}`);
+    return requested;
+  }
+  if (/romantic|pink|rose|editorial|portrait|日系|浪漫|粉色|人物/i.test(idea)) return "editorial";
+  if (/\bgt\b|racing|race\s|motorsport|sports? car|赛车|赛道|跑车/i.test(idea)) return "gt-control";
+  return "glass-studio";
+}
+
+function profileDesign(profile) {
+  if (profile === "editorial") return {
+    appearance: "light",
+    density: "comfortable",
+    radius: 8,
+    taskSurface: "solid-readable",
+    colors: {
+      background: "#f7f2f4", panel: "#fffafb", panelAlt: "#f3e7eb",
+      accent: "#d65a79", accentAlt: "#e6879e", secondary: "#789987",
+      highlight: "#b54867", text: "#2c2528", muted: "#75696e",
+      line: "rgba(214, 90, 121, .24)"
+    }
+  };
+  if (profile === "glass-studio") return {
+    appearance: "dark",
+    density: "comfortable",
+    radius: 8,
+    taskSurface: "glass-readable",
+    colors: {
+      background: "#0c1416", panel: "#172225", panelAlt: "#203034",
+      accent: "#76b89d", accentAlt: "#9bcbb7", secondary: "#78aeca",
+      highlight: "#d4c176", text: "#f0f5f3", muted: "#a4b2ae",
+      line: "rgba(118, 184, 157, .26)"
+    }
+  };
+  return {
+    appearance: "dark",
+    density: "compact",
+    radius: 6,
+    taskSurface: "glass-readable",
+    colors: {
+      background: "#080b0e", panel: "#15191e", panelAlt: "#20262d",
+      accent: "#f15a24", accentAlt: "#ff8753", secondary: "#60b7c8",
+      highlight: "#f6c85f", text: "#f4f6f8", muted: "#a8afb8",
+      line: "rgba(241, 90, 36, .30)"
+    }
+  };
+}
+
 async function validateReferences(values) {
   const references = [];
   for (const value of values ?? []) {
@@ -36,7 +87,7 @@ async function validateReferences(values) {
   return references;
 }
 
-export async function prepareTheme({ name, idea, outputDir, references = [] }) {
+export async function prepareTheme({ name, idea, outputDir, references = [], profile }) {
   const themeName = cleanText(name, "name", 80);
   const themeIdea = cleanText(idea, "idea", 500);
   const destination = path.resolve(outputDir);
@@ -45,6 +96,8 @@ export async function prepareTheme({ name, idea, outputDir, references = [] }) {
   const localReferences = await validateReferences(references);
   const slug = slugify(themeName);
   const themeId = `theme-${slug}`;
+  const uiProfile = inferProfile(themeIdea, profile);
+  const design = profileDesign(uiProfile);
 
   await fs.mkdir(path.join(destination, "prompts"), { recursive: true, mode: 0o700 });
   const source = {
@@ -58,27 +111,16 @@ export async function prepareTheme({ name, idea, outputDir, references = [] }) {
     statusText: "SYSTEM / READY",
     quote: "FOCUS. BUILD. SHIP.",
     image: "background.png",
-    appearance: "dark",
-    colors: {
-      background: "#080b0e",
-      panel: "#15191e",
-      panelAlt: "#20262d",
-      accent: "#f15a24",
-      accentAlt: "#ff8753",
-      secondary: "#60b7c8",
-      highlight: "#f6c85f",
-      text: "#f4f6f8",
-      muted: "#a8afb8",
-      line: "rgba(241, 90, 36, .30)"
-    },
+    appearance: design.appearance,
+    colors: design.colors,
     art: { safeArea: "left", taskMode: "ambient", focusX: 0.76, focusY: 0.5 },
     ui: {
-      profile: "gt-control",
-      density: "compact",
-      radius: 6,
+      profile: uiProfile,
+      density: design.density,
+      radius: design.radius,
       routes: {
         home: { surface: "smoked", opacity: 0.54 },
-        task: { surface: "glass-readable", opacity: 0.86 }
+        task: { surface: design.taskSurface, opacity: design.appearance === "light" ? 0.92 : 0.86 }
       }
     },
     decorations: [
@@ -123,7 +165,8 @@ async function main() {
     name: valueFor(args, "name"),
     idea: valueFor(args, "idea"),
     outputDir: valueFor(args, "output-dir"),
-    references: valuesFor(args, "reference")
+    references: valuesFor(args, "reference"),
+    profile: valuesFor(args, "profile")[0]
   });
   console.log(JSON.stringify(result));
 }

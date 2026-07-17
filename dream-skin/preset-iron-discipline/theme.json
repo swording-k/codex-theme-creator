@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "id": "preset-iron-discipline",
   "name": "铁律训练场",
   "brandSubtitle": "CODEX DREAM SKIN",
@@ -27,5 +27,18 @@
     "text": "#f4f0e8",
     "muted": "#aaa197",
     "line": "rgba(214, 106, 76, .24)"
-  }
+  },
+  "ui": {
+    "profile": "gt-control",
+    "density": "compact",
+    "radius": 6,
+    "routes": {
+      "home": { "surface": "smoked", "opacity": 0.62 },
+      "task": { "surface": "solid-readable", "opacity": 0.9 }
+    }
+  },
+  "decorations": [
+    { "type": "masthead", "slot": "home-top", "text": "IRON DISCIPLINE / TRAINING FLOOR", "interactive": false },
+    { "type": "status-strip", "slot": "home-bottom", "text": "FOCUS  |  CONTROL  |  PROGRESS", "interactive": false }
+  ]
 }

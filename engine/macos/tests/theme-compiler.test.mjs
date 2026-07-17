@@ -64,6 +64,14 @@ try {
   assert.equal(payload.schemaVersion, 2);
   assert.equal(payload.ui.profile, "gt-control");
   assert.equal(payload.decorations[0].type, "status-strip");
+  assert.equal(
+    (await compileTheme({ ...source, ui: { ...source.ui, profile: "glass-studio" } }, root)).ui.profile,
+    "glass-studio",
+  );
+  assert.equal(
+    (await compileTheme({ ...source, ui: { ...source.ui, profile: "editorial" } }, root)).ui.profile,
+    "editorial",
+  );
 
   await assert.rejects(
     () => compileTheme({ ...source, ui: { ...source.ui, profile: "raw-css" } }, root),

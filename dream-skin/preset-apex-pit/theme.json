@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "id": "preset-apex-pit",
   "name": "Apex Pit",
   "brandSubtitle": "CODEX DREAM SKIN",
@@ -27,5 +27,18 @@
     "text": "#f2f5f7",
     "muted": "#9ba7b2",
     "line": "rgba(224, 90, 42, .24)"
-  }
+  },
+  "ui": {
+    "profile": "gt-control",
+    "density": "compact",
+    "radius": 6,
+    "routes": {
+      "home": { "surface": "smoked", "opacity": 0.56 },
+      "task": { "surface": "glass-readable", "opacity": 0.88 }
+    }
+  },
+  "decorations": [
+    { "type": "masthead", "slot": "home-top", "text": "APEX PIT / RACE CONTROL", "interactive": false },
+    { "type": "status-strip", "slot": "home-bottom", "text": "PIT LANE OPEN  |  SYSTEM READY  |  NEXT APEX", "interactive": false }
+  ]
 }

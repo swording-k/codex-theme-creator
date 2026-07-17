@@ -391,7 +391,7 @@ async function loadTheme(themeDir) {
     throw new Error(`${configPath} has an invalid ui.radius field`);
   }
   const ui = {
-    profile: choice(rawUi.profile, "ui.profile", ["native", "gt-control"]),
+    profile: choice(rawUi.profile, "ui.profile", ["native", "gt-control", "glass-studio", "editorial"]),
     density: choice(rawUi.density, "ui.density", ["comfortable", "compact"]),
     radius,
     routes: {

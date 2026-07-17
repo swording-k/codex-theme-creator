@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "id": "preset-alpine-lake-desk",
   "name": "雪湖工作台",
   "brandSubtitle": "CODEX DREAM SKIN",
@@ -27,5 +27,18 @@
     "text": "#1f2b34",
     "muted": "#60717b",
     "line": "rgba(79, 127, 159, .22)"
-  }
+  },
+  "ui": {
+    "profile": "glass-studio",
+    "density": "comfortable",
+    "radius": 8,
+    "routes": {
+      "home": { "surface": "transparent", "opacity": 0.42 },
+      "task": { "surface": "glass-readable", "opacity": 0.84 }
+    }
+  },
+  "decorations": [
+    { "type": "masthead", "slot": "home-top", "text": "ALPINE LAKE / CLEAR MIND", "interactive": false },
+    { "type": "corner-frame", "slot": "shell-corners", "text": "", "interactive": false }
+  ]
 }

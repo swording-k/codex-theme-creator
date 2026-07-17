@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 
-const UI_PROFILES = new Set(["native", "gt-control"]);
+const UI_PROFILES = new Set(["native", "gt-control", "glass-studio", "editorial"]);
 const SURFACES = new Set(["transparent", "smoked", "glass-readable", "solid-readable"]);
 const DECORATION_TYPES = new Set(["masthead", "status-strip", "corner-frame"]);
 const DECORATION_SLOTS = new Set(["home-top", "home-bottom", "shell-corners"]);

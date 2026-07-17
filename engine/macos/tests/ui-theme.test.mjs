@@ -38,6 +38,8 @@ assert.match(
 );
 
 assert.match(css, /data-dream-ui-profile="gt-control"/, "GT profile CSS should exist.");
+assert.match(css, /data-dream-ui-profile="glass-studio"/, "Glass Studio profile CSS should exist.");
+assert.match(css, /data-dream-ui-profile="editorial"/, "Editorial profile CSS should exist.");
 for (const capability of [
   "aside.app-shell-left-panel",
   "bg-token-list-hover-background",

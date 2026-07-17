@@ -45,10 +45,19 @@ node "$CREATOR_ROOT/skill/scripts/prepare-theme.mjs" \
   --name "<theme name>" \
   --idea "<single-line visual direction>" \
   --output-dir "<absolute output directory>" \
+  --profile "<optional gt-control|glass-studio|editorial>" \
   --reference "<optional absolute image path>"
 ```
 
 Inspect supplied references before designing. Do not treat a screenshot containing Codex UI as the injectable background; use it only as visual direction.
+
+Choose the complete interface language from the request:
+
+- `gt-control`: racing, industrial, cyber, performance, gaming, and high-energy themes;
+- `glass-studio`: forest, rain, mountain, lake, coding, calm, technology, and atmospheric themes;
+- `editorial`: romantic, portrait, Japanese, fashion, soft, bright, and story-led themes.
+
+Omit `--profile` only when the preparation script's inference is appropriate. The profile is a starting language; tune colors, route surfaces, radius, density, art placement, and approved decorations in `source-theme.json`.
 
 ### 2. Design
 

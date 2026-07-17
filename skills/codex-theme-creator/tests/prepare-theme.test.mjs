@@ -30,6 +30,28 @@ try {
   assert.match(prompt, /premium dark GT racing control room/i);
   assert.doesNotMatch(JSON.stringify(source), /https?:\/\//i);
 
+  const editorialOutput = path.join(root, "rose-editorial");
+  await prepareTheme({
+    name: "Rose Editorial",
+    idea: "A romantic pink editorial theme with elegant portrait photography.",
+    outputDir: editorialOutput,
+  });
+  assert.equal(
+    JSON.parse(await fs.readFile(path.join(editorialOutput, "source-theme.json"), "utf8")).ui.profile,
+    "editorial",
+  );
+
+  const glassOutput = path.join(root, "forest-glass");
+  await prepareTheme({
+    name: "Forest Glass",
+    idea: "A calm rainy forest coding atmosphere with transparent glass surfaces.",
+    outputDir: glassOutput,
+  });
+  assert.equal(
+    JSON.parse(await fs.readFile(path.join(glassOutput, "source-theme.json"), "utf8")).ui.profile,
+    "glass-studio",
+  );
+
   console.log("PASS: theme creator prepares a contained schema-v2 workspace.");
 } finally {
   await fs.rm(root, { recursive: true, force: true });
