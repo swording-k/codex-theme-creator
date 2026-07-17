@@ -17,19 +17,65 @@
 
 ## 如何使用
 
-先安装并启动上游项目 Codex Dream Skin，然后把想用的主题复制到它的主题库。
+主题需要配合上游项目 Codex Dream Skin 使用。推荐先安装 Codex Dream Skin，再把本仓库里的主题复制到它的主题库。
+
+### 1. 安装 Codex Dream Skin
+
+```bash
+git clone https://github.com/Fei-Away/Codex-Dream-Skin.git
+cd Codex-Dream-Skin/macos
+./scripts/install-dream-skin-macos.sh
+```
+
+安装脚本会要求 Codex 处于关闭状态，因为它需要安全写入 Codex 配置并用本地 CDP 方式启动 Codex。CDP 是 Chrome DevTools Protocol，本质上是 Electron / Chromium 应用常用的本地调试通道。
+
+### 2. 下载本仓库主题
 
 ```bash
 git clone https://github.com/<your-name>/codex-skins.git
 cd codex-skins
+```
 
+把 `<your-name>` 替换成实际 GitHub 用户名或组织名。
+
+### 3. 命令行安装主题
+
+```bash
 ./scripts/install-local-theme.sh preset-iron-discipline
 ~/.codex/codex-dream-skin-studio/scripts/switch-theme-macos.sh \
   --id preset-iron-discipline
 ```
 
-如果还没安装 Codex Dream Skin，请先按上游 macOS 说明完成安装：
-https://github.com/Fei-Away/Codex-Dream-Skin/tree/main/macos
+如果切换时报 `Theme not found`，说明主题还没有复制到 Dream Skin 的主题库，重新执行 `install-local-theme.sh` 即可。
+
+如果切换时报 CDP 或注入失败，通常是 Codex Dream Skin 还没有启动。可以运行：
+
+```bash
+~/.codex/codex-dream-skin-studio/scripts/start-dream-skin-macos.sh \
+  --prompt-restart
+```
+
+### 4. 让 Codex 帮你安装
+
+如果你已经在 Codex 里打开了这个仓库，也可以直接把下面这段提示词发给 Codex：
+
+```text
+请帮我安装这个仓库里的 Codex Dream Skin 主题。
+
+要求：
+1. 先检查我是否已经安装 Fei-Away/Codex-Dream-Skin。
+2. 如果已经安装，把 dream-skin/preset-iron-discipline 复制到
+   ~/Library/Application Support/CodexDreamSkinStudio/themes/。
+3. 用上游 switch-theme-macos.sh 切换到 preset-iron-discipline。
+4. 如果 Codex Dream Skin 没安装，先告诉我需要关闭 Codex 后再安装，不要直接强行关闭当前 Codex。
+5. 安装后请验证 theme.json 和 background.jpg 是否存在，并说明是否真正完成切换。
+```
+
+更简短的版本：
+
+```text
+帮我把当前仓库里的 preset-iron-discipline 安装成 Codex Dream Skin 主题，并切换过去。注意不要在没确认的情况下关闭当前 Codex。
+```
 
 ## 主题包结构
 
@@ -44,6 +90,23 @@ preset-<slug>/
 ```
 
 `background.jpg` 是真正被注入使用的纯背景图；`preview.png` 只用于 GitHub 和社媒展示。
+
+## 制作新主题
+
+做新主题时优先保证 Codex 信息可读性。好看的背景如果让文字、任务列表或输入框看不清，就不算合格主题。
+
+核心规则：
+
+- 背景必须是纯壁纸，不要包含 Codex 界面、按钮、文字、logo 或水印。
+- 左侧 `x=0%..52%` 保持低信息、低对比，给 Codex 原生标题、项目列表和对话内容留空间。
+- 主视觉尽量放在右侧 `x=62%..88%`，避免压住主要阅读区域。
+- 如果背景整体偏深，`theme.json` 应使用浅色文字，例如 `text: "#f4f0e8"`。
+- 如果背景整体偏浅，`theme.json` 应使用深色文字，例如 `text: "#202124"`。
+- 不要出现“黑色字压在黑色背景上”或“白色字压在强白高光上”的组合。
+- 强光、霓虹、复杂纹理和高对比器械细节不要放在输入框附近，尤其是画面下方中间区域。
+- 每次生成背景后，都要在真实 Codex 或截图叠层里检查可读性。
+
+更详细的制作约束见 [`docs/THEME_AUTHORING.md`](./docs/THEME_AUTHORING.md)。
 
 ## 分享建议
 
