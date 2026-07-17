@@ -9,6 +9,7 @@
 
 - `private-themes/` 中未提交、未公开的私人主题；
 - 第三方商标、产品外观、角色、人物肖像或用户提供的参考图；
+- `dream-skin/preset-porsche-gt3rs/` 中的 Porsche / GT3 RS 风格与可识别品牌元素；
 - OpenAI、Codex 或其他第三方的名称、图标与界面资产；
 - `engine/macos/` 中已由其 LICENSE 和 NOTICE 单独覆盖的上游内容。
 

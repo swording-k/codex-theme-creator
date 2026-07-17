@@ -4,9 +4,9 @@
 
 ## 真实效果截图
 
-### Apex Pit
+### Porsche GT3 RS
 
-![Apex Pit Codex theme](media/showcase/01-apex-pit.jpg)
+![Porsche GT3 RS Codex theme](media/showcase/01-porsche-gt3rs.jpg)
 
 ### Alpine Lake Desk
 
@@ -30,6 +30,8 @@
 > 本项目是非官方开源实验，不由 OpenAI 制作或背书。运行时基于
 > [`Fei-Away/Codex-Dream-Skin`](https://github.com/Fei-Away/Codex-Dream-Skin)
 > 的 macOS 本地注入机制，不修改 Codex `.app`、`app.asar` 或应用签名。
+
+简单说，`Codex-Dream-Skin` 是底层换肤运行时；本项目在它之上增加 Codex Skill、主题生成 schema、UI Profile、导出和真实界面验证流程。
 
 ## 它是怎样工作的
 
@@ -260,7 +262,7 @@ theme-<slug>/
 | 主题 | 风格 | 目录 |
 | --- | --- | --- |
 | 铁律训练场 | 高端商业力量区 | [`dream-skin/preset-iron-discipline`](./dream-skin/preset-iron-discipline/) |
-| Apex Pit | 原创 GT 维修区 | [`dream-skin/preset-apex-pit`](./dream-skin/preset-apex-pit/) |
+| Porsche GT3 RS | GT 赛车控制台 | [`dream-skin/preset-porsche-gt3rs`](./dream-skin/preset-porsche-gt3rs/) |
 | 雨林专注 | 雨中森林、写代码 | [`dream-skin/preset-rainforest-focus`](./dream-skin/preset-rainforest-focus/) |
 | 雪湖工作台 | 湖泊雪山、写代码 | [`dream-skin/preset-alpine-lake-desk`](./dream-skin/preset-alpine-lake-desk/) |
 
@@ -269,7 +271,7 @@ theme-<slug>/
 - 不允许主题包包含任意 JavaScript、远程资源或可点击装饰层。
 - 装饰层统一 `pointer-events: none`，不能挡住原生按钮。
 - 不修改真实项目、任务、权限或账号信息。
-- 不要公开带有私人项目名、聊天内容、账号信息的实机截图。
+- 默认不要公开带有私人项目名、聊天内容、账号信息的实机截图；只有本人确认可公开时才放入展示素材。
 - 公开主题只使用原创、已授权或允许再分发的素材。
 - 明星、动漫角色、汽车品牌等素材应先确认肖像权、版权和商标使用边界；私人使用不等于允许公开分发。
 

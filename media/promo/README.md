@@ -9,7 +9,7 @@
 
 当前素材：
 
-- `apex-pit`：GT 赛车 / 维修区氛围。
+- `porsche-gt3rs`：GT 赛车 / 赛道控制台氛围。
 - `iron-discipline`：高级铁馆 / 健身风格。
 - `rainforest-focus`：雨中森林 / 编程专注氛围。
 - `alpine-lake-desk`：湖泊雪山 / 桌面工作氛围。

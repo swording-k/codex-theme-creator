@@ -5,7 +5,7 @@
 ## 主题列表
 
 - [`preset-iron-discipline`](./preset-iron-discipline/): 高端商业力量区主题「铁律训练场」。
-- [`preset-apex-pit`](./preset-apex-pit/): 原创 GT 赛道维修区主题「Apex Pit」。
+- [`preset-porsche-gt3rs`](./preset-porsche-gt3rs/): GT 赛车控制台主题「Porsche GT3 RS」。
 - [`preset-rainforest-focus`](./preset-rainforest-focus/): 雨中森林写代码主题「雨林专注」。
 - [`preset-alpine-lake-desk`](./preset-alpine-lake-desk/): 湖泊雪山写代码主题「雪湖工作台」。
 
