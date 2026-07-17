@@ -2,6 +2,22 @@
 
 通过一句话或一张参考图，让 Codex 为 macOS Codex Desktop 创作、安装并验证一套完整主题。
 
+## 真实效果截图
+
+### Apex Pit
+
+![Apex Pit Codex theme](media/showcase/01-apex-pit.jpg)
+
+### Alpine Lake Desk
+
+![Alpine Lake Desk Codex theme](media/showcase/02-alpine-lake-desk.jpg)
+
+### Rainforest Focus
+
+![Rainforest Focus Codex theme](media/showcase/03-rainforest-focus.jpg)
+
+以上截图来自真实运行中的 macOS Codex Desktop，不是背景图合成。
+
 这不是单纯的壁纸替换器。生成结果可以统一改变：
 
 - 左侧目录、项目与任务的普通/悬停/选中状态；
