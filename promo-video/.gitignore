@@ -3,3 +3,4 @@ assets/
 out/frames/
 public/*.png
 public/*.aiff
+public/*.mp3

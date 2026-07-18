@@ -248,7 +248,7 @@ const FinalScene: React.FC = () => {
       <div style={{position: 'absolute', left: 92, right: 92, top: 190}}>
         <Kicker color="#6ee7f9">Open Source</Kicker>
         <Headline size={76}>想要你的专属 Codex 主题？</Headline>
-        <Body>把链接发给 Codex，让它安装 Theme Creator，然后说出你的风格。</Body>
+        <Body>搜索项目名，让 Codex 安装 Theme Creator，然后说出你的风格。</Body>
       </div>
       <div
         style={{
