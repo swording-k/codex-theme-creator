@@ -2,6 +2,33 @@
 
 通过一句话或一张参考图，让 Codex 为 macOS Codex Desktop 创作、安装并验证一套完整主题。
 
+## 先看这里
+
+这是一个给 **Codex Desktop 做主题** 的开源项目。它和普通皮肤包最大的区别是：
+
+- 普通皮肤包：别人做好几套主题，你下载来用。
+- Codex Theme Creator：你告诉 Codex 想要什么风格，Codex 帮你生成、安装、验证一套主题。
+
+它不是网站，也不是在线服务。当前主要适合 macOS Codex Desktop 用户。
+
+最简单的用法：
+
+1. 把这个 GitHub 链接发给 Codex：`https://github.com/swording-k/codex-theme-creator`
+2. 让 Codex 安装这个项目里的 Theme Creator。
+3. 对 Codex 说：`帮我做一套宇宙主题，深色，玻璃质感，要保证文字清楚。`
+
+你也可以直接复制这段给 Codex：
+
+```text
+请打开并安装这个开源项目：
+https://github.com/swording-k/codex-theme-creator
+
+安装后，帮我做一套完整的 Codex Desktop 主题。
+我想要：宇宙、深色、玻璃质感、安静高级。
+不要只换背景，侧栏、选中状态、输入框、按钮和已有任务页面也要统一。
+完成后请切换主题，并验证真实 Codex 界面是否可读。
+```
+
 ## 真实效果截图
 
 ### Porsche GT3 RS

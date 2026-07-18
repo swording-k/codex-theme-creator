@@ -1,0 +1,20 @@
+{
+  "name": "codex-theme-creator-promo",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "preview": "remotion preview src/index.ts",
+    "render": "remotion render src/index.ts CodexThemeCreator out/codex-theme-creator-promo.mp4 --codec h264 --pixel-format yuv420p"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.490",
+    "@remotion/media-utils": "4.0.490",
+    "remotion": "4.0.490",
+    "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3"
+  }
+}
