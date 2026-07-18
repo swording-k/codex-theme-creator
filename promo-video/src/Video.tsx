@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   AbsoluteFill,
+  Audio,
   Img,
   Sequence,
   interpolate,
@@ -282,6 +283,7 @@ export const PromoVideo: React.FC = () => {
 
   return (
     <AbsoluteFill style={{fontFamily: 'Inter, PingFang SC, Hiragino Sans GB, Arial, sans-serif', background: '#030714'}}>
+      <Audio src={staticFile('voiceover.m4a')} volume={1} />
       <Ambient />
       <Sequence from={0} durationInFrames={150}>
         <Hero />
