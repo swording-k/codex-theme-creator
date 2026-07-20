@@ -11,6 +11,54 @@
 
 它不是网站，也不是在线服务。当前主要适合 macOS Codex Desktop 用户；Theme Studio 的界面和主题编辑核心已经按跨平台方式组织，Windows 端会先支持主题编辑/保存，真正注入 Codex 与一键切换需要单独的 Windows 运行时。
 
+### 用户到底怎么下载和使用
+
+用户不是访问我们的 `127.0.0.1`。`127.0.0.1` 的意思是“用户自己的电脑”。正确流程是：
+
+1. 用户下载这个 GitHub 仓库，或者把仓库链接发给自己的 Codex。
+2. 在自己电脑上安装本项目。
+3. 启动本地 Theme Studio。
+4. 浏览器打开 `http://127.0.0.1:56938/`，此时打开的是用户自己电脑上的控制台。
+5. 在 Theme Studio 里选择、保存、启用主题。
+
+给普通用户最简单的提示词：
+
+```text
+请打开这个项目并安装：
+https://github.com/swording-k/codex-theme-creator
+
+安装完成后，启动 Theme Studio，让我可以在本地管理和启用 Codex 主题。
+```
+
+会命令行的用户可以直接运行：
+
+```bash
+git clone https://github.com/swording-k/codex-theme-creator.git
+cd codex-theme-creator
+./scripts/install-theme-creator.sh
+./scripts/start-theme-studio.sh
+```
+
+### 它到底改了 Codex 什么
+
+它不改 Codex `.app` 本体，不改 `app.asar`，也不改签名。
+
+原理是：
+
+```text
+theme.json + 背景图
+       ↓
+本地运行时读取主题
+       ↓
+通过 Codex Desktop 的本地调试通道注入受控 CSS/JS
+       ↓
+给 Codex 页面加主题 class、CSS 变量、背景层和少量安全装饰
+       ↓
+侧栏、New Chat、输入框、按钮、任务页、弹窗和预览面板外壳跟随主题
+```
+
+主题真正改变的是 Codex 的渲染层样式：颜色变量、背景图层、面板透明度、边框、选中态、输入框、任务内容表面和受控动态效果。它不是把一张截图盖在 Codex 上，也不是把第三方网页内容强行染色。
+
 ### 不懂命令行也想调主题
 
 现在可以先打开本地的 **Theme Studio**：

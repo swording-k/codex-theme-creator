@@ -46,6 +46,9 @@ assert.match(css, /--dream-studio-bg-blur/, "studio background blur should be a 
 assert.match(css, /filter:\s*blur\(var\(--dream-studio-bg-blur\)\) brightness\(var\(--dream-studio-bg-brightness\)\)/, "studio background effects should apply to art layers.");
 for (const capability of [
   "aside.app-shell-left-panel",
+  "aside[class*=\"ml-auto\"][class*=\"h-full\"]",
+  "role=\"tabpanel\"",
+  "webview",
   "bg-token-list-hover-background",
   "group\\/home-suggestions button",
   "composer-surface-chrome",
@@ -61,6 +64,11 @@ assert.match(
   css,
   /data-dream-ui-profile="gt-control"[\s\S]*group\\\/home-suggestions button \*[\s\S]*color:\s*currentColor !important/,
   "GT suggestion card descendants should inherit a readable foreground.",
+);
+assert.match(
+  css,
+  /aside\[class\*="ml-auto"\]\[class\*="h-full"\][\s\S]*\[role="tabpanel"\][\s\S]*background:\s*rgb\(var\(--ds-panel-rgb\)/,
+  "right preview panel chrome should inherit theme panel colors.",
 );
 assert.match(
   css,

@@ -444,6 +444,53 @@ html.codex-dream-skin main.main-surface > header.app-header-tint {
   backdrop-filter: blur(14px) saturate(108%) !important;
 }
 
+/* Codex's right preview pane hosts browser previews in a webview. The theme can
+   safely style the Codex chrome around it, while leaving the webview content
+   itself faithful to the app/site being previewed. */
+html.codex-dream-skin aside[class*="ml-auto"][class*="h-full"] {
+  color: var(--ds-text) !important;
+  background: rgb(var(--ds-bg-rgb) / .86) !important;
+}
+
+html.codex-dream-skin aside[class*="ml-auto"][class*="h-full"]
+  [class*="bg-token-main-surface-primary"],
+html.codex-dream-skin aside[class*="ml-auto"][class*="h-full"] [role="tabpanel"] {
+  color: var(--ds-text) !important;
+  background: rgb(var(--ds-panel-rgb) / .88) !important;
+  border-color: var(--ds-line) !important;
+}
+
+html.codex-dream-skin aside[class*="ml-auto"][class*="h-full"]
+  [class*="border-token-border"],
+html.codex-dream-skin aside[class*="ml-auto"][class*="h-full"]
+  [class*="border-token-border-default"] {
+  border-color: var(--ds-line) !important;
+}
+
+html.codex-dream-skin aside[class*="ml-auto"][class*="h-full"]
+  [class*="h-toolbar-pane"] {
+  color: var(--ds-text) !important;
+  background: rgb(var(--ds-panel-rgb) / .92) !important;
+  border-color: var(--ds-line) !important;
+  backdrop-filter: blur(14px) saturate(106%) !important;
+}
+
+html.codex-dream-skin aside[class*="ml-auto"][class*="h-full"] button,
+html.codex-dream-skin aside[class*="ml-auto"][class*="h-full"] [role="tab"] {
+  color: var(--ds-text) !important;
+}
+
+html.codex-dream-skin aside[class*="ml-auto"][class*="h-full"] button:hover,
+html.codex-dream-skin aside[class*="ml-auto"][class*="h-full"] [role="tab"]:hover,
+html.codex-dream-skin aside[class*="ml-auto"][class*="h-full"] [aria-selected="true"] {
+  color: var(--ds-text) !important;
+  background: rgb(var(--ds-accent-rgb) / .12) !important;
+}
+
+html.codex-dream-skin aside[class*="ml-auto"][class*="h-full"] webview {
+  background: var(--ds-panel) !important;
+}
+
 #codex-dream-skin-chrome {
   position: fixed;
   z-index: 31;
