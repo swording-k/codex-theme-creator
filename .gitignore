@@ -5,6 +5,8 @@ node_modules/
 # Temporary icon conversion output; icon.icns is the tracked release asset.
 desktop-app/build/icon-next.icns
 desktop-app/build/icon-next.iconset/
+desktop-app/build/icon-v3.icns
+desktop-app/build/icon-v3.iconset/
 
 # Local drafts and generated sources. Public theme packs only need
 # theme.json, background.jpg, preview.png, and README.md.

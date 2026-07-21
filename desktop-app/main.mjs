@@ -15,15 +15,15 @@ const hasSingleInstanceLock = app.requestSingleInstanceLock();
 
 const macTrayIconSvg = `
 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
-  <path d="m6.4 4.1-3.1 4.9 3.1 4.9M11.6 4.1l3.1 4.9-3.1 4.9" fill="none" stroke="#000" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M9 6.35v5.3M6.35 9h5.3" fill="none" stroke="#000" stroke-width="1.45" stroke-linecap="round"/>
+  <path d="M3 3.5h9.2a2 2 0 0 1 2 2v5.1a2 2 0 0 1-2 2H8l-2.6 2 .4-2H3a2 2 0 0 1-2-2V5.5a2 2 0 0 1 2-2Z" fill="none" stroke="#000" stroke-width="1.45" stroke-linejoin="round"/>
+  <path d="M12.3 12.1h3.2v3.2h-3.2zM8.3 4.8c1.7.5 2 2.7.3 3.6M6.2 10.2c-1.6-.6-1.8-2.8-.1-3.6" fill="none" stroke="#000" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>`;
 
 const trayIconSvg = `
 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
-  <rect width="32" height="32" rx="9" fill="#0b1421"/>
-  <path d="m11.7 7.3-5 8.7 5 8.7M20.3 7.3l5 8.7-5 8.7" fill="none" stroke="#eaf4ff" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M16 11.3v9.4M11.3 16h9.4" fill="none" stroke="#58b8ff" stroke-width="2.35" stroke-linecap="round"/>
+  <rect width="32" height="32" rx="9" fill="#101418"/>
+  <path d="M5 6h15a3 3 0 0 1 3 3v9a3 3 0 0 1-3 3h-7l-4 4 .7-4H5a3 3 0 0 1-3-3V9a3 3 0 0 1 3-3Z" fill="none" stroke="#f4f7f8" stroke-width="2.15" stroke-linejoin="round"/>
+  <path d="M20 20h8v8h-8z" fill="#62c5a8" stroke="#f4f7f8" stroke-width="1.5"/>
 </svg>`;
 
 async function createWindow() {
