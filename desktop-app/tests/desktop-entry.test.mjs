@@ -21,6 +21,9 @@ assert.equal(packageJson.build.mac.hardenedRuntime, true, "public macOS builds e
 assert.equal(packageJson.build.mac.entitlements, "build/entitlements.mac.plist", "public macOS builds declare explicit notarization entitlements");
 assert.ok(packageJson.build.extraResources.length >= 4, "packaged app bundles its studio, engine, presets, and creator Skill");
 assert.match(main, /startThemeStudioServer/, "desktop shell starts the embedded Theme Studio server");
+assert.match(main, /ensureBundledCreatorSkill/, "first launch automatically provisions the bundled creator Skill");
+assert.match(main, /creator-skill-version\.txt/, "creator Skill provisioning is versioned and does not rerun on every launch");
+assert.match(main, /await fs\.access\(installer\)/, "creator Skill provisioning verifies its bundled installer before recording success");
 assert.match(main, /process\.resourcesPath/, "packaged app resolves bundled resources instead of the development checkout");
 assert.match(main, /BrowserWindow/, "desktop shell creates a native window");
 assert.match(main, /Tray/, "desktop shell creates a macOS menu bar / Windows tray icon");
@@ -29,6 +32,7 @@ assert.match(main, /setContextMenu/, "tray menu is attached to the tray icon");
 assert.doesNotMatch(main, /nativeImage\.createEmpty\(\)/, "macOS tray must use a visible icon, not an empty placeholder");
 assert.match(main, /setTemplateImage\(true\)/, "macOS tray icon should render as a native menu bar template image");
 assert.doesNotMatch(main, /tray\.setTitle\(/, "macOS tray should use the product mark instead of a letter label");
+assert.match(main, /tray-template\.png/, "macOS tray uses a dedicated 18px template asset instead of shrinking the app icon");
 assert.match(main, /requestSingleInstanceLock/, "desktop app should avoid multiple stale controllers");
 assert.match(main, /second-instance/, "launching again should focus the existing controller");
 assert.match(main, /\/api\/themes/, "tray menu can read the local theme library");

@@ -1,5 +1,7 @@
 import { app, BrowserWindow, Menu, Tray, nativeImage, shell } from "electron";
+import fs from "node:fs/promises";
 import path from "node:path";
+import { spawn } from "node:child_process";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -61,11 +63,45 @@ async function createWindow() {
   await mainWindow.loadURL(serverHandle.url);
 }
 
+async function runInstaller(script) {
+  return new Promise((resolve, reject) => {
+    const child = spawn("/bin/bash", [script], { cwd: appRoot, stdio: ["ignore", "pipe", "pipe"] });
+    let stdout = "";
+    let stderr = "";
+    child.stdout.on("data", (chunk) => { stdout += chunk; });
+    child.stderr.on("data", (chunk) => { stderr += chunk; });
+    child.on("error", reject);
+    child.on("close", (code) => {
+      if (code === 0) resolve({ stdout, stderr });
+      else reject(new Error(stderr || stdout || `Creator Skill installation failed with code ${code}`));
+    });
+  });
+}
+
+async function ensureBundledCreatorSkill() {
+  if (process.platform !== "darwin") return;
+  const marker = path.join(app.getPath("userData"), "creator-skill-version.txt");
+  const version = app.getVersion();
+  const installedVersion = await fs.readFile(marker, "utf8").catch(() => "");
+  if (installedVersion.trim() === version) return;
+  const installer = path.join(appRoot, "scripts", "install-theme-creator.sh");
+  await fs.access(installer);
+  await runInstaller(installer);
+  await fs.writeFile(marker, `${version}\n`, "utf8");
+}
+
 function trayImage() {
-  const svg = process.platform === "darwin" ? macTrayIconSvg : trayIconSvg;
-  const image = nativeImage.createFromDataURL(`data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}`);
-  if (process.platform === "darwin") image.setTemplateImage(true);
-  return image;
+  if (process.platform === "darwin") {
+    const templatePath = app.isPackaged
+      ? path.join(process.resourcesPath, "tray-template.png")
+      : path.join(here, "build", "tray-template.png");
+    const template = nativeImage.createFromPath(templatePath);
+    if (!template.isEmpty()) {
+      template.setTemplateImage(true);
+      return template;
+    }
+  }
+  return nativeImage.createFromDataURL(`data:image/svg+xml;base64,${Buffer.from(trayIconSvg).toString("base64")}`);
 }
 
 async function availableThemes() {
@@ -137,6 +173,11 @@ if (!hasSingleInstanceLock) {
   });
 
   app.whenReady().then(async () => {
+    try {
+      await ensureBundledCreatorSkill();
+    } catch (error) {
+      console.error(`Creator Skill setup failed: ${error.message}`);
+    }
     serverHandle = await startThemeStudioServer({ port: 0 });
     await createTray();
     await createWindow();

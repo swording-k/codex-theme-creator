@@ -1,6 +1,6 @@
 {
   "name": "codex-theme-creator-app",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A local Codex Desktop theme library and creator for macOS.",
   "author": "Codex Theme Creator contributors",
   "private": true,
@@ -25,7 +25,8 @@
       { "from": "../engine", "to": "engine" },
       { "from": "../scripts", "to": "scripts" },
       { "from": "../skills", "to": "skills" },
-      { "from": "../dream-skin", "to": "dream-skin" }
+      { "from": "../dream-skin", "to": "dream-skin" },
+      { "from": "build/tray-template.png", "to": "tray-template.png" }
     ],
     "mac": {
       "category": "public.app-category.utilities",
