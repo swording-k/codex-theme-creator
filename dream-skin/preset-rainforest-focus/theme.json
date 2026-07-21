@@ -9,7 +9,7 @@
   "statusText": "FOCUS MODE ONLINE",
   "quote": "CODE WITH THE RAIN",
   "image": "background.jpg",
-  "appearance": "light",
+  "appearance": "dark",
   "art": {
     "focusX": 0.72,
     "focusY": 0.44,
@@ -17,16 +17,16 @@
     "taskMode": "ambient"
   },
   "colors": {
-    "background": "#dce7df",
-    "panel": "#f3f6f1",
-    "panelAlt": "#e8eee7",
-    "accent": "#4f7f52",
-    "accentAlt": "#6fa76c",
-    "secondary": "#b4864f",
-    "highlight": "#d7a65d",
-    "text": "#1b2620",
-    "muted": "#5c6d63",
-    "line": "rgba(79, 127, 82, .22)"
+    "background": "#0d1713",
+    "panel": "#14231c",
+    "panelAlt": "#20372b",
+    "accent": "#72b878",
+    "accentAlt": "#9bd394",
+    "secondary": "#d0ab74",
+    "highlight": "#f0c879",
+    "text": "#eff8ef",
+    "muted": "#b8cabc",
+    "line": "rgba(126, 187, 130, .28)"
   },
   "ui": {
     "profile": "glass-studio",

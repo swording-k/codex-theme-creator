@@ -31,27 +31,37 @@ assert.doesNotMatch(
 );
 assert.match(
   css,
-  /data-dream-art-task-mode="ambient"[\s\S]{0,500}body\s*\{[\s\S]{0,500}background-image:\s*var\(--dream-skin-art\) !important;[\s\S]{0,200}background-size:\s*cover !important;/,
-  "Wide ambient task artwork should cover the full application window.",
+  /data-dream-art-task-mode="ambient"[\s\S]{0,500}body\s*\{[\s\S]{0,180}background:\s*transparent !important;/,
+  "Wide ambient task routes should leave the full-window wallpaper pseudo-layer visible.",
 );
 assert.match(
   css,
-  /data-dream-task-mode="banner"[\s\S]{0,900}body\s*\{[\s\S]{0,500}background-image:\s*var\(--dream-skin-art\) !important;[\s\S]{0,200}background-size:\s*cover !important;/,
+  /body::before\s*\{[\s\S]{0,500}background-image:\s*var\(--dream-skin-art\);[\s\S]{0,500}filter:\s*blur\(var\(--dream-studio-bg-blur\)\) brightness\(var\(--dream-studio-bg-brightness\)\)/,
+  "Wide ambient task artwork should use a blur-capable background pseudo-layer.",
+);
+assert.match(
+  css,
+  /data-dream-task-mode="banner"[\s\S]{0,900}body\s*\{[\s\S]{0,180}background:\s*transparent !important;/,
   "Wide banner task artwork should use the same full-window wallpaper contract as ambient routes.",
 );
 assert.match(
   css,
-  /data-dream-art-wide="true"\]:has\(main\.main-surface\.dream-skin-home-shell\)[\s\S]{0,100}body\s*\{[\s\S]{0,300}background-image:\s*var\(--dream-skin-art\) !important;/,
+  /data-dream-art-wide="true"\]:has\(main\.main-surface\.dream-skin-home-shell\)[\s\S]{0,100}body\s*\{[\s\S]{0,120}background:\s*transparent !important;/,
   "Wide home artwork should use the same full-window image as utility routes.",
 );
 assert.match(
   css,
-  /data-dream-art-wide="true"\]:has\(main\.main-surface\.dream-skin-home-shell\)[\s\S]{0,120}body\s*\{[\s\S]{0,260}background-position:\s*var\(--ds-art-position\) !important;/,
+  /body::before\s*\{[\s\S]{0,500}filter:\s*blur\(var\(--dream-studio-bg-blur\)\) brightness\(var\(--dream-studio-bg-brightness\)\)/,
+  "Wide home artwork should use the same blur-capable background pseudo-layer.",
+);
+assert.match(
+  css,
+  /body::before\s*\{[\s\S]{0,260}background-position:\s*var\(--ds-art-position\);/,
   "Wide home artwork must honor the configured focal point instead of forcing a centered crop.",
 );
 assert.match(
   css,
-  /data-dream-art-task-mode="ambient"[\s\S]{0,260}data-dream-art-wide="true"\]:has\(main\.main-surface:not\(\.dream-skin-home-shell\)\)[\s\S]{0,120}body\s*\{[\s\S]{0,260}background-position:\s*var\(--ds-art-position\) !important;/,
+  /body::before\s*\{[\s\S]{0,260}background-position:\s*var\(--ds-art-position\);/,
   "Wide task artwork must retain the same focal point as the home route.",
 );
 assert.match(
@@ -61,7 +71,7 @@ assert.match(
 );
 assert.match(
   css,
-  /--ds-immersive-composer-solid:\s*rgb\(var\(--ds-panel-rgb\) \/ \.74\);/,
+  /--ds-immersive-composer-solid:\s*rgb\(var\(--ds-panel-rgb\) \/ var\(--ds-task-opacity, \.74\)\);/,
   "The light composer should retain enough transparency to reveal the selected artwork.",
 );
 assert.match(
@@ -83,6 +93,21 @@ assert.match(
   css,
   /\.composer-surface-chrome button:not\(\[class~="bg-token-foreground"\]\)[\s\S]{0,100}color:\s*var\(--ds-muted\) !important;/,
   "Composer controls must remain readable when Codex native tokens lag behind a forced dark appearance.",
+);
+assert.match(
+  css,
+  /\.composer-surface-chrome\s*\{[\s\S]{0,220}background:\s*rgb\(var\(--ds-panel-rgb\) \/ var\(--ds-task-opacity, \.94\)\) !important;/,
+  "The task opacity slider should affect the real Codex composer surface.",
+);
+assert.match(
+  css,
+  /--ds-immersive-composer-solid:\s*rgb\(var\(--ds-panel-2-rgb\) \/ var\(--ds-task-opacity, \.82\)\);/,
+  "The task opacity slider should affect wide immersive composer surfaces.",
+);
+assert.match(
+  css,
+  /group\\\/home-suggestions button\s*\{[\s\S]{0,220}background:\s*rgb\(var\(--ds-panel-rgb\) \/ var\(--ds-home-opacity, \.[0-9]+\)\) !important;/,
+  "The home opacity slider should affect New Chat suggestion cards.",
 );
 assert.match(
   css,
@@ -119,8 +144,8 @@ assert.match(
 );
 assert.match(
   css,
-  /data-dream-motion-profile="gt-broadcast"[\s\S]{0,260}main\.main-surface:not\(\.dream-skin-home-shell\) article[\s\S]{0,220}background:\s*rgb\(var\(--ds-panel-rgb\) \/ \.76\)/,
-  "GT task messages should use local readable surfaces instead of a full-window wash.",
+  /data-dream-motion-profile="gt-broadcast"[\s\S]{0,260}main\.main-surface:not\(\.dream-skin-home-shell\) article[\s\S]{0,220}background:\s*rgb\(var\(--ds-panel-rgb\) \/ var\(--ds-task-opacity, \.76\)\)/,
+  "GT task messages should stay readable while honoring the task opacity slider.",
 );
 assert.match(
   css,

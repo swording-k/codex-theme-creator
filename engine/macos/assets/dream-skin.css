@@ -45,12 +45,10 @@
   --ds-immersive-mid: rgb(var(--ds-bg-rgb) / .26);
   --ds-immersive-far: rgb(var(--ds-bg-rgb) / .16);
   --ds-immersive-sidebar: rgb(var(--ds-panel-rgb) / .46);
-  --ds-task-immersive-sidebar: rgb(var(--ds-panel-rgb) / .70);
+  --ds-task-immersive-sidebar: rgb(var(--ds-panel-rgb) / var(--ds-task-opacity, .70));
   --ds-immersive-chrome: rgb(var(--ds-panel-rgb) / .28);
   --ds-immersive-composer: rgb(var(--ds-panel-rgb) / .44);
-  --ds-immersive-composer-solid: color-mix(in srgb,
-    rgb(var(--ds-panel-2-rgb)) 88%,
-    rgb(var(--ds-muted-rgb)) 12%);
+  --ds-immersive-composer-solid: rgb(var(--ds-panel-2-rgb) / var(--ds-task-opacity, .82));
   --ds-immersive-line: rgb(var(--ds-muted-rgb) / .42);
   --ds-task-immersive-edge: rgb(var(--ds-bg-rgb) / .82);
   --ds-task-immersive-mid: rgb(var(--ds-bg-rgb) / .74);
@@ -58,6 +56,7 @@
   --dream-studio-bg-blur: 0px;
   --dream-studio-bg-brightness: 1;
   --dream-studio-bg-scale: 1;
+  --dream-studio-bg-dim: 0;
 }
 
 html.codex-dream-skin[data-dream-shell="light"] {
@@ -95,10 +94,10 @@ html.codex-dream-skin[data-dream-shell="light"] {
   --ds-immersive-mid: rgb(var(--ds-panel-rgb) / .28);
   --ds-immersive-far: rgb(var(--ds-panel-rgb) / .14);
   --ds-immersive-sidebar: rgb(var(--ds-panel-rgb) / .48);
-  --ds-task-immersive-sidebar: rgb(var(--ds-panel-rgb) / .72);
+  --ds-task-immersive-sidebar: rgb(var(--ds-panel-rgb) / var(--ds-task-opacity, .72));
   --ds-immersive-chrome: rgb(var(--ds-panel-rgb) / .34);
   --ds-immersive-composer: rgb(var(--ds-panel-rgb) / .46);
-  --ds-immersive-composer-solid: rgb(var(--ds-panel-rgb) / .74);
+  --ds-immersive-composer-solid: rgb(var(--ds-panel-rgb) / var(--ds-task-opacity, .74));
   --ds-immersive-line: rgb(var(--ds-accent-rgb) / .24);
   --ds-task-immersive-edge: rgb(var(--ds-panel-rgb) / .86);
   --ds-task-immersive-mid: rgb(var(--ds-panel-rgb) / .78);
@@ -183,6 +182,8 @@ html.codex-dream-skin[data-dream-shell="light"]:is([data-dream-art-safe="none"],
 }
 
 html.codex-dream-skin body {
+  position: relative;
+  z-index: 0;
   background: var(--ds-bg) !important;
   color: var(--ds-text) !important;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Microsoft YaHei UI", "Segoe UI", system-ui, sans-serif !important;
@@ -190,6 +191,32 @@ html.codex-dream-skin body {
 
 html.codex-dream-skin body::before {
   content: none;
+}
+
+html.codex-dream-skin:is([data-dream-art-wide="true"], [data-dream-art-aspect="wide"], [data-dream-art-aspect="ultrawide"])
+  body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: var(--dream-skin-art);
+  background-position: var(--ds-art-position);
+  background-size: cover;
+  background-repeat: no-repeat;
+  filter: blur(var(--dream-studio-bg-blur)) brightness(var(--dream-studio-bg-brightness));
+  transform: scale(var(--dream-studio-bg-scale));
+  transform-origin: center;
+}
+
+html.codex-dream-skin:is([data-dream-art-wide="true"], [data-dream-art-aspect="wide"], [data-dream-art-aspect="ultrawide"])
+  body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: rgb(0 0 0 / var(--dream-studio-bg-dim));
 }
 
 html.codex-dream-skin aside.app-shell-left-panel {
@@ -267,9 +294,6 @@ html.codex-dream-skin aside.app-shell-left-panel [aria-current="page"] svg {
 }
 
 html.codex-dream-skin main.main-surface {
-  position: relative !important;
-  isolation: isolate;
-  overflow: hidden !important;
   background: var(--ds-bg) !important;
   border: 1px solid var(--ds-line) !important;
   border-right: 0 !important;
@@ -311,12 +335,8 @@ html.codex-dream-skin:is([data-dream-task-mode="ambient"], [data-dream-art-task-
 }
 
 html.codex-dream-skin:is([data-dream-task-mode="ambient"], [data-dream-art-task-mode="ambient"], [data-dream-task-mode="banner"], [data-dream-art-task-mode="banner"])[data-dream-art-wide="true"]:has(main.main-surface:not(.dream-skin-home-shell)) body {
-  background-image: var(--dream-skin-art) !important;
-  background-position: var(--ds-art-position) !important;
-  background-size: cover !important;
-  background-repeat: no-repeat !important;
-  background-attachment: fixed !important;
-  filter: brightness(var(--dream-studio-bg-brightness));
+  background: transparent !important;
+  filter: none !important;
 }
 
 html.codex-dream-skin:is([data-dream-task-mode="ambient"], [data-dream-art-task-mode="ambient"], [data-dream-task-mode="banner"], [data-dream-art-task-mode="banner"])[data-dream-art-wide="true"]:has(main.main-surface:not(.dream-skin-home-shell))
@@ -408,32 +428,19 @@ html.codex-dream-skin:is([data-dream-task-mode="off"], [data-dream-art-task-mode
   content: none;
 }
 
-html.codex-dream-skin main.main-surface:not(.dream-skin-home-shell) > * {
-  position: relative;
-  z-index: 1;
-}
-
-html.codex-dream-skin main.main-surface:not(.dream-skin-home-shell) [role="main"] {
-  background: transparent !important;
-  color: var(--ds-text) !important;
-  text-shadow:
-    0 1px 2px rgb(var(--ds-bg-rgb) / .72),
-    0 0 10px rgb(var(--ds-bg-rgb) / .46);
-}
-
-html.codex-dream-skin[data-dream-shell="light"] main.main-surface:not(.dream-skin-home-shell) [role="main"] {
-  text-shadow: none;
-}
-
 html.codex-dream-skin main.main-surface:not(.dream-skin-home-shell) article {
   border: 1px solid rgb(var(--ds-muted-rgb) / .12);
-  background: rgb(var(--ds-panel-rgb) / .44);
+  background: rgb(var(--ds-panel-rgb) / var(--ds-task-opacity, .44));
   box-shadow: 0 8px 24px rgb(var(--ds-bg-rgb) / .10);
   backdrop-filter: blur(7px) saturate(105%);
 }
 
+html.codex-dream-skin:has(main.main-surface:not(.dream-skin-home-shell)) aside.app-shell-left-panel {
+  background: rgb(var(--ds-panel-rgb) / var(--ds-task-opacity, .94)) !important;
+}
+
 html.codex-dream-skin[data-dream-shell="light"] main.main-surface:not(.dream-skin-home-shell) article {
-  background: rgb(var(--ds-panel-rgb) / .72);
+  background: rgb(var(--ds-panel-rgb) / var(--ds-task-opacity, .72));
 }
 
 html.codex-dream-skin main.main-surface > header.app-header-tint {
@@ -442,53 +449,6 @@ html.codex-dream-skin main.main-surface > header.app-header-tint {
   background: rgb(var(--ds-panel-rgb) / .90) !important;
   border-bottom: 1px solid var(--ds-line) !important;
   backdrop-filter: blur(14px) saturate(108%) !important;
-}
-
-/* Codex's right preview pane hosts browser previews in a webview. The theme can
-   safely style the Codex chrome around it, while leaving the webview content
-   itself faithful to the app/site being previewed. */
-html.codex-dream-skin aside[class*="ml-auto"][class*="h-full"] {
-  color: var(--ds-text) !important;
-  background: rgb(var(--ds-bg-rgb) / .86) !important;
-}
-
-html.codex-dream-skin aside[class*="ml-auto"][class*="h-full"]
-  [class*="bg-token-main-surface-primary"],
-html.codex-dream-skin aside[class*="ml-auto"][class*="h-full"] [role="tabpanel"] {
-  color: var(--ds-text) !important;
-  background: rgb(var(--ds-panel-rgb) / .88) !important;
-  border-color: var(--ds-line) !important;
-}
-
-html.codex-dream-skin aside[class*="ml-auto"][class*="h-full"]
-  [class*="border-token-border"],
-html.codex-dream-skin aside[class*="ml-auto"][class*="h-full"]
-  [class*="border-token-border-default"] {
-  border-color: var(--ds-line) !important;
-}
-
-html.codex-dream-skin aside[class*="ml-auto"][class*="h-full"]
-  [class*="h-toolbar-pane"] {
-  color: var(--ds-text) !important;
-  background: rgb(var(--ds-panel-rgb) / .92) !important;
-  border-color: var(--ds-line) !important;
-  backdrop-filter: blur(14px) saturate(106%) !important;
-}
-
-html.codex-dream-skin aside[class*="ml-auto"][class*="h-full"] button,
-html.codex-dream-skin aside[class*="ml-auto"][class*="h-full"] [role="tab"] {
-  color: var(--ds-text) !important;
-}
-
-html.codex-dream-skin aside[class*="ml-auto"][class*="h-full"] button:hover,
-html.codex-dream-skin aside[class*="ml-auto"][class*="h-full"] [role="tab"]:hover,
-html.codex-dream-skin aside[class*="ml-auto"][class*="h-full"] [aria-selected="true"] {
-  color: var(--ds-text) !important;
-  background: rgb(var(--ds-accent-rgb) / .12) !important;
-}
-
-html.codex-dream-skin aside[class*="ml-auto"][class*="h-full"] webview {
-  background: var(--ds-panel) !important;
 }
 
 #codex-dream-skin-chrome {
@@ -790,7 +750,7 @@ html.codex-dream-skin:is([data-dream-art-safe="center"], [data-dream-art-safe-ar
 }
 
 .dream-skin-home > div:first-child > div:first-child > div:first-child > div:first-child > div:first-child {
-  width: min(46%, 520px) !important;
+  width: min(58%, 720px) !important;
   align-items: flex-start !important;
   gap: 0 !important;
 }
@@ -814,10 +774,13 @@ html.codex-dream-skin:is([data-dream-art-safe="center"], [data-dream-art-safe-ar
   display: block !important;
   max-width: 100% !important;
   color: var(--ds-text) !important;
-  font-size: clamp(19px, 1.85vw, 27px) !important;
+  font-size: clamp(18px, 1.65vw, 25px) !important;
   line-height: 1.28 !important;
   font-weight: 760 !important;
   text-align: inherit !important;
+  word-break: keep-all !important;
+  overflow-wrap: normal !important;
+  line-break: strict !important;
   text-shadow: none !important;
   opacity: 1 !important;
   pointer-events: auto !important;
@@ -841,6 +804,7 @@ html.codex-dream-skin:is([data-dream-art-safe="center"], [data-dream-art-safe-ar
 .dream-skin-home [data-feature="game-source"] button {
   margin: 0 5px;
   padding: 2px 9px 3px;
+  white-space: nowrap !important;
   border: 1px solid rgb(var(--ds-accent-rgb) / .36);
   border-radius: 999px;
   background: rgb(var(--ds-accent-rgb) / .10);
@@ -875,7 +839,7 @@ html.codex-dream-skin:is([data-dream-art-safe="center"], [data-dream-art-safe-ar
   text-align: center !important;
   border: 1px solid rgb(var(--ds-muted-rgb) / .18) !important;
   border-radius: 8px !important;
-  background: rgb(var(--ds-panel-rgb) / .86) !important;
+  background: rgb(var(--ds-panel-rgb) / var(--ds-home-opacity, .86)) !important;
   color: var(--ds-text) !important;
   font-weight: 600 !important;
   line-height: 1.45 !important;
@@ -909,7 +873,7 @@ html.codex-dream-skin[data-dream-motion-profile="gt-broadcast"]
 html.codex-dream-skin[data-dream-motion-profile="gt-broadcast"]
   main.main-surface:not(.dream-skin-home-shell) article {
   color: var(--ds-text) !important;
-  background: rgb(var(--ds-panel-rgb) / .76);
+  background: rgb(var(--ds-panel-rgb) / var(--ds-task-opacity, .76));
   border-color: rgb(var(--ds-muted-rgb) / .20);
   backdrop-filter: blur(8px) saturate(104%);
 }
@@ -946,7 +910,7 @@ html.codex-dream-skin .composer-surface-chrome {
   overflow: visible !important;
   border: 1px solid rgb(var(--ds-muted-rgb) / .18) !important;
   border-radius: 22px !important;
-  background: rgb(var(--ds-panel-rgb) / .94) !important;
+  background: rgb(var(--ds-panel-rgb) / var(--ds-task-opacity, .94)) !important;
   box-shadow: 0 10px 28px rgb(var(--ds-bg-rgb) / .24) !important;
   backdrop-filter: blur(16px) saturate(108%) !important;
 }
@@ -956,11 +920,7 @@ html.codex-dream-skin .composer-surface-chrome::before { content: none !importan
 /* A wide image can carry the home screen too. The native hero remains live,
    but the artwork is painted once on the window instead of repeated in a card. */
 html.codex-dream-skin[data-dream-art-wide="true"]:has(main.main-surface.dream-skin-home-shell) body {
-  background-image: var(--dream-skin-art) !important;
-  background-position: var(--ds-art-position) !important;
-  background-size: cover !important;
-  background-repeat: no-repeat !important;
-  background-attachment: fixed !important;
+  background: transparent !important;
 }
 
 html.codex-dream-skin[data-dream-art-wide="true"]:has(main.main-surface.dream-skin-home-shell)
@@ -1259,14 +1219,14 @@ html.codex-dream-skin [data-message-author-role] { border-radius: 16px; }
 
 /* Complete UI profiles are compiled capabilities, not theme-authored raw CSS. */
 html.codex-dream-skin[data-dream-ui-profile="gt-control"] {
-  --ds-gt-sidebar: linear-gradient(180deg, rgb(9 12 15 / .92), rgb(15 19 23 / .86));
+  --ds-gt-sidebar: linear-gradient(180deg, rgb(9 12 15 / var(--ds-task-opacity, .92)), rgb(15 19 23 / var(--ds-task-opacity, .86)));
   --ds-gt-surface-strong: rgb(15 19 24 / var(--ds-task-opacity, .88));
   --ds-gt-line: rgb(var(--ds-accent-rgb) / .34);
   --ds-gt-shadow: 0 14px 32px rgb(0 0 0 / .28);
 }
 
 html.codex-dream-skin[data-dream-ui-profile="gt-control"][data-dream-shell="dark"] {
-  --ds-gt-sidebar: linear-gradient(180deg, rgb(7 10 13 / .94), rgb(15 19 23 / .88));
+  --ds-gt-sidebar: linear-gradient(180deg, rgb(7 10 13 / var(--ds-task-opacity, .94)), rgb(15 19 23 / var(--ds-task-opacity, .88)));
 }
 
 html.codex-dream-skin[data-dream-ui-profile="gt-control"] aside.app-shell-left-panel {
@@ -1307,7 +1267,9 @@ html.codex-dream-skin[data-dream-ui-profile="gt-control"] .group\/home-suggestio
   min-height: 150px !important;
   overflow: hidden !important;
   color: var(--ds-text) !important;
-  background: linear-gradient(145deg, rgb(25 30 36 / .88), rgb(10 14 18 / .78)) !important;
+  background: linear-gradient(145deg,
+    rgb(var(--ds-panel-rgb) / var(--ds-home-opacity, .88)),
+    rgb(var(--ds-bg-rgb) / max(.42, calc(var(--ds-home-opacity, .78) - .10)))) !important;
   border: 1px solid rgb(var(--ds-muted-rgb) / .24) !important;
   border-top-color: rgb(var(--ds-accent-rgb) / .64) !important;
   border-radius: var(--ds-ui-radius, 6px) !important;
@@ -1410,7 +1372,7 @@ html.codex-dream-skin[data-dream-ui-profile="glass-studio"] .group\/home-suggest
 html.codex-dream-skin[data-dream-ui-profile="glass-studio"] .composer-surface-chrome,
 html.codex-dream-skin[data-dream-ui-profile="glass-studio"][data-dream-task-surface="glass-readable"] main.main-surface:not(.dream-skin-home-shell) article {
   color: var(--ds-text) !important;
-  background: rgb(var(--ds-panel-rgb) / .66) !important;
+  background: rgb(var(--ds-panel-rgb) / var(--ds-task-opacity, .66)) !important;
   border: 1px solid rgb(var(--ds-text-rgb) / .16) !important;
   border-radius: var(--ds-ui-radius, 8px) !important;
   box-shadow: 0 16px 36px rgb(var(--ds-bg-rgb) / .20) !important;
@@ -1422,13 +1384,17 @@ html.codex-dream-skin[data-dream-ui-profile="glass-studio"] .composer-surface-ch
   color: currentColor !important;
 }
 
+html.codex-dream-skin[data-dream-ui-profile="glass-studio"] .group\/home-suggestions button {
+  background: rgb(var(--ds-panel-rgb) / var(--ds-home-opacity, .66)) !important;
+}
+
 html.codex-dream-skin[data-dream-ui-profile="glass-studio"] :focus-visible {
   outline: 2px solid rgb(var(--ds-accent-rgb) / .78) !important;
   outline-offset: 2px !important;
 }
 
 html.codex-dream-skin[data-dream-ui-profile="editorial"] aside.app-shell-left-panel {
-  background: rgb(var(--ds-panel-rgb) / .90) !important;
+  background: rgb(var(--ds-panel-rgb) / var(--ds-task-opacity, .90)) !important;
   border-color: rgb(var(--ds-accent-rgb) / .22) !important;
   border-radius: 0 var(--ds-ui-radius, 8px) var(--ds-ui-radius, 8px) 0 !important;
   box-shadow: 8px 0 28px rgb(var(--ds-bg-rgb) / .16) !important;
@@ -1446,7 +1412,7 @@ html.codex-dream-skin[data-dream-ui-profile="editorial"] .group\/home-suggestion
 html.codex-dream-skin[data-dream-ui-profile="editorial"] .composer-surface-chrome,
 html.codex-dream-skin[data-dream-ui-profile="editorial"][data-dream-task-surface="solid-readable"] main.main-surface:not(.dream-skin-home-shell) article {
   color: var(--ds-text) !important;
-  background: rgb(var(--ds-panel-rgb) / .90) !important;
+  background: rgb(var(--ds-panel-rgb) / var(--ds-task-opacity, .90)) !important;
   border: 1px solid rgb(var(--ds-accent-rgb) / .22) !important;
   border-radius: var(--ds-ui-radius, 8px) !important;
   box-shadow: 0 10px 28px rgb(var(--ds-bg-rgb) / .14) !important;
@@ -1456,6 +1422,10 @@ html.codex-dream-skin[data-dream-ui-profile="editorial"][data-dream-task-surface
 html.codex-dream-skin[data-dream-ui-profile="editorial"] .group\/home-suggestions button *,
 html.codex-dream-skin[data-dream-ui-profile="editorial"] .composer-surface-chrome button * {
   color: currentColor !important;
+}
+
+html.codex-dream-skin[data-dream-ui-profile="editorial"] .group\/home-suggestions button {
+  background: rgb(var(--ds-panel-rgb) / var(--ds-home-opacity, .90)) !important;
 }
 
 html.codex-dream-skin[data-dream-ui-profile="editorial"] :focus-visible {

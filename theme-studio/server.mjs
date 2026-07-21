@@ -18,6 +18,58 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(here, "..");
 const publicRoot = path.join(here, "public");
 const platformConfig = getPlatformConfig({ repoRoot });
+const codexHome = process.env.CODEX_HOME || path.join(process.env.HOME || "", ".codex");
+const creatorSkillPath = path.join(codexHome, "skills", "codex-theme-creator", "SKILL.md");
+const creatorEnginePath = path.join(codexHome, "codex-theme-creator", "engine", "macos", "scripts", "injector.mjs");
+
+async function pathExists(file) {
+  try {
+    await fs.access(file);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function creatorStatus() {
+  const [skillInstalled, engineInstalled] = await Promise.all([
+    pathExists(creatorSkillPath),
+    pathExists(creatorEnginePath),
+  ]);
+  const supported = process.platform === "darwin";
+  return {
+    supported,
+    skillInstalled,
+    engineInstalled,
+    ready: supported && skillInstalled && engineInstalled,
+    skillPath: creatorSkillPath,
+    themesRoot: platformConfig.themesRoot,
+    message: supported
+      ? (skillInstalled && engineInstalled
+        ? "创作助手已安装。把想法或参考图发给 Codex，完成的主题会自动写入本机主题库。"
+        : "先安装创作助手。安装后，Codex 才知道如何生成、校验并把主题写入主题库。")
+      : "Windows 端创作包格式已预留；Codex 注入与一键切换运行时仍在建设中。",
+  };
+}
+
+function installCreatorSkill() {
+  if (process.platform !== "darwin") {
+    throw new Error("当前仅支持在 macOS 安装创作助手。");
+  }
+  const installer = path.join(repoRoot, "scripts", "install-theme-creator.sh");
+  return new Promise((resolve, reject) => {
+    const child = spawn("/bin/bash", [installer], { cwd: repoRoot, stdio: ["ignore", "pipe", "pipe"] });
+    let stdout = "";
+    let stderr = "";
+    child.stdout.on("data", (chunk) => { stdout += chunk; });
+    child.stderr.on("data", (chunk) => { stderr += chunk; });
+    child.on("error", reject);
+    child.on("close", (code) => {
+      if (code === 0) resolve({ stdout, stderr });
+      else reject(new Error(stderr || stdout || `Creator Skill installation failed with code ${code}`));
+    });
+  });
+}
 
 function parsePort(argv) {
   const index = argv.indexOf("--port");
@@ -89,7 +141,25 @@ function switchTheme(id) {
   });
 }
 
-function injectThemeDir(themeDir, timeoutMs = 3500) {
+function restoreDefaultTheme() {
+  if (!platformConfig.canRestoreDefault || !platformConfig.restoreScript) {
+    throw new Error(platformConfig.switchUnavailableReason);
+  }
+  return new Promise((resolve, reject) => {
+    const child = spawn(platformConfig.restoreScript, [], { cwd: repoRoot, stdio: ["ignore", "pipe", "pipe"] });
+    let stdout = "";
+    let stderr = "";
+    child.stdout.on("data", (chunk) => { stdout += chunk; });
+    child.stderr.on("data", (chunk) => { stderr += chunk; });
+    child.on("error", reject);
+    child.on("close", (code) => {
+      if (code === 0) resolve({ stdout, stderr });
+      else reject(new Error(stderr || stdout || `Restore failed with code ${code}`));
+    });
+  });
+}
+
+function injectThemeDir(themeDir, timeoutMs = 8000) {
   if (!platformConfig.canSwitch) {
     throw new Error(platformConfig.switchUnavailableReason);
   }
@@ -129,6 +199,17 @@ async function handleApi(req, res) {
   const url = new URL(req.url, "http://127.0.0.1");
   if (req.method === "GET" && url.pathname === "/api/platform") {
     sendJson(res, 200, { platform: platformConfig });
+    return;
+  }
+  if (req.method === "GET" && url.pathname === "/api/creator-status") {
+    sendJson(res, 200, { creator: await creatorStatus() });
+    return;
+  }
+  if (req.method === "POST" && url.pathname === "/api/install-creator-skill") {
+    await installCreatorSkill();
+    const creator = await creatorStatus();
+    if (!creator.ready) throw new Error("创作助手安装没有完成，请查看本机 Codex 目录权限。");
+    sendJson(res, 200, { ok: true, creator });
     return;
   }
   if (req.method === "GET" && url.pathname === "/api/themes") {
@@ -175,7 +256,17 @@ async function handleApi(req, res) {
         settings: body.settings,
       });
     await switchTheme(saved.id);
-    sendJson(res, 200, { ok: true, id: saved.id, theme: { ...saved.theme, themeDir: saved.themeDir } });
+    sendJson(res, 200, {
+      ok: true,
+      id: saved.id,
+      visibleId: saved.id,
+      theme: { ...saved.theme, themeDir: saved.themeDir },
+    });
+    return;
+  }
+  if (req.method === "POST" && url.pathname === "/api/restore-default") {
+    await restoreDefaultTheme();
+    sendJson(res, 200, { ok: true, id: "codex-default" });
     return;
   }
   if (req.method === "POST" && url.pathname === "/api/preview") {

@@ -31,6 +31,42 @@ await fs.writeFile(path.join(legacyPresetDir, "theme.json"), `${JSON.stringify({
   name: "Old local preset",
   image: "background.jpg",
 }, null, 2)}\n`);
+const duplicateStudioDir = path.join(themesRoot, "studio-porsche-gt3-rs-remix");
+await fs.mkdir(duplicateStudioDir, { recursive: true });
+await fs.copyFile(
+  path.join(repoRoot, "dream-skin", "preset-porsche-gt3rs", "background.jpg"),
+  path.join(duplicateStudioDir, "background.jpg"),
+);
+await fs.writeFile(path.join(duplicateStudioDir, "theme.json"), `${JSON.stringify({
+  id: "studio-porsche-gt3-rs-remix",
+  name: "Porsche GT3 RS Remix",
+  image: "background.jpg",
+  studio: { version: 1, settings: { backgroundBlur: 8 } },
+}, null, 2)}\n`);
+const savedCustomizationDir = path.join(themesRoot, "studio-porsche-gt3-rs-custom");
+await fs.mkdir(savedCustomizationDir, { recursive: true });
+await fs.copyFile(
+  path.join(repoRoot, "dream-skin", "preset-porsche-gt3rs", "background.jpg"),
+  path.join(savedCustomizationDir, "background.jpg"),
+);
+await fs.writeFile(path.join(savedCustomizationDir, "theme.json"), `${JSON.stringify({
+  id: "studio-porsche-gt3-rs-custom",
+  name: "Porsche GT3 RS Custom",
+  image: "background.jpg",
+  studio: { version: 1, settings: { backgroundBlur: 8 } },
+}, null, 2)}\n`);
+const duplicateChineseCustomizationDir = path.join(themesRoot, "studio-alpine-lake-tuned");
+await fs.mkdir(duplicateChineseCustomizationDir, { recursive: true });
+await fs.copyFile(
+  path.join(repoRoot, "dream-skin", "preset-alpine-lake-desk", "background.jpg"),
+  path.join(duplicateChineseCustomizationDir, "background.jpg"),
+);
+await fs.writeFile(path.join(duplicateChineseCustomizationDir, "theme.json"), `${JSON.stringify({
+  id: "studio-alpine-lake-tuned",
+  name: "雪湖工作台 我的调校",
+  image: "background.jpg",
+  studio: { version: 1, baseThemeId: "preset-alpine-lake-desk", settings: { backgroundBlur: 8 } },
+}, null, 2)}\n`);
 
 const themes = await discoverThemes({ repoRoot, themesRoot });
 assert.ok(
@@ -42,9 +78,33 @@ assert.ok(
   "keeps preset UI profile in theme summary",
 );
 assert.equal(
+  themes.find((theme) => theme.id === "preset-rainforest-focus")?.appearance,
+  "dark",
+  "rainforest preset uses a dark readable shell instead of a white wash over the artwork",
+);
+assert.equal(
+  themes.find((theme) => theme.id === "preset-alpine-lake-desk")?.appearance,
+  "dark",
+  "alpine preset uses the same readable shell policy",
+);
+assert.equal(
   themes.some((theme) => theme.id === "preset-old-local-background"),
   false,
   "hides legacy installed preset backgrounds from the personal library",
+);
+assert.equal(
+  themes.some((theme) => theme.id === "studio-porsche-gt3-rs-remix"),
+  false,
+  "hides local remix duplicates when a curated preset already represents the same theme",
+);
+assert.equal(
+  themes.some((theme) => theme.id === "studio-alpine-lake-tuned"),
+  false,
+  "hides historical Chinese named tuning copies when the curated preset already represents the same theme",
+);
+assert.ok(
+  themes.some((theme) => theme.id === "studio-porsche-gt3-rs-custom"),
+  "keeps a saved Studio customization visible when it has its own name",
 );
 
 assert.throws(

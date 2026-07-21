@@ -35,6 +35,7 @@
     "--dream-skin-project-label", "--dream-motion-intensity",
     "--ds-ui-density", "--ds-ui-radius", "--ds-home-opacity", "--ds-task-opacity",
     "--dream-studio-bg-blur", "--dream-studio-bg-brightness", "--dream-studio-bg-scale",
+    "--dream-studio-bg-dim",
   ];
   const installToken = {};
   const existingAnalysisCache = window[ANALYSIS_CACHE_KEY];
@@ -410,8 +411,9 @@
     const dim = typeof effects.backgroundDim === "number" && Number.isFinite(effects.backgroundDim)
       ? clamp(effects.backgroundDim, 0, 0.75) : 0;
     setStyleProperty(root, "--dream-studio-bg-blur", `${blur}px`);
-    setStyleProperty(root, "--dream-studio-bg-brightness", String(clamp(1 - dim * 0.55, 0.45, 1)));
+    setStyleProperty(root, "--dream-studio-bg-brightness", String(clamp(1 - dim * 0.35, 0.62, 1)));
     setStyleProperty(root, "--dream-studio-bg-scale", String(blur > 0 ? 1.015 + blur / 360 : 1));
+    setStyleProperty(root, "--dream-studio-bg-dim", String(dim));
   };
 
   const applyArtMetadata = (root) => {

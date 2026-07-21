@@ -13,15 +13,14 @@
           <p class="eyebrow">Codex Theme Creator</p>
           <h1>主题管理器</h1>
           <p class="lede">让 Codex 负责创作主题，这里负责收藏、微调、保存和切换。</p>
-        </div>
-        <div class="nav-list">
-          <button class="nav-item active" type="button">我的主题</button>
-          <button class="nav-item" type="button">创作入口</button>
-          <button class="nav-item" type="button">自动切换</button>
+          <p class="compatibility-note">兼容提示：请先在 Codex 设置中使用深色外观。主题不修改 Codex 原生外观设置，以免影响文档、预览和弹窗。</p>
         </div>
         <div class="sidebar-actions">
           <button class="primary" id="createWithCodex">让 Codex 创作新主题</button>
+          <button id="installCreator">安装创作助手</button>
+          <p class="creator-status" id="creatorStatus">正在检查创作助手...</p>
           <button id="refresh">刷新主题列表</button>
+          <p class="sidebar-note">创作成功后会自动出现在主题库。手动导入时，把包含 <code>theme.json</code> 和背景图的完整文件夹放进本机主题库。</p>
         </div>
       </aside>
 
@@ -38,7 +37,7 @@
         </header>
 
         <div class="content">
-          <div>
+          <div class="library-pane">
             <section class="creator-panel">
               <div>
                 <p class="eyebrow">Create with Codex</p>
@@ -46,16 +45,14 @@
               </div>
               <button id="copyPrompt">复制创作提示词</button>
             </section>
-            <section class="help-panel">
-              <div>
-                <p class="eyebrow">用户主题放哪里</p>
-                <p>让 Codex 创作完成后，主题会进入本机主题库。手动导入时，把包含 <code>theme.json</code> 和背景图的文件夹放进下面的目录，然后点刷新。</p>
-                <code id="themeLibraryPath">正在读取主题库路径...</code>
-              </div>
-            </section>
             <section class="preview-panel" id="themePreview">
               <div class="preview-art" id="previewArt"></div>
               <div class="preview-dim"></div>
+              <div class="preview-topbar">
+                <span>Codex</span>
+                <span>New chat</span>
+                <span>Projects</span>
+              </div>
               <div class="preview-sidebar">
                 <strong>Codex</strong>
                 <span>New chat</span>
@@ -90,14 +87,18 @@
               <input name="backgroundDim" type="range" min="0" max="75" value="18">
             </label>
             <label>
-              新聊天透明度
+              首页推荐卡片透明度
               <input name="homeOpacity" type="range" min="0" max="100" value="54">
             </label>
             <label>
-              任务页透明度
+              任务面板透明度
               <input name="taskOpacity" type="range" min="0" max="100" value="86">
             </label>
-            <p class="hint">这些调节会写入主题包，并实时预览到 Codex。动态效果暂时不开放，等质量达到宣传级再回来。</p>
+            <p class="hint">滑杆会先更新这里的预览；点击“保存并启用”后才会写入 Codex。首页透明度影响 New Chat 的四张推荐卡片；任务透明度统一影响已有任务的输入框、内容卡片和侧栏。</p>
+            <div class="library-path">
+              <span>用户主题放哪里</span>
+              <code id="themeLibraryPath">正在读取主题库路径...</code>
+            </div>
           </form>
         </div>
       </section>

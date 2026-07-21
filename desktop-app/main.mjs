@@ -1,14 +1,23 @@
 import { app, BrowserWindow, Menu, Tray, nativeImage, shell } from "electron";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
-
-import { startThemeStudioServer } from "../theme-studio/server.mjs";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
+const appRoot = app.isPackaged ? process.resourcesPath : path.resolve(here, "..");
+const { startThemeStudioServer } = await import(
+  pathToFileURL(path.join(appRoot, "theme-studio", "server.mjs")).href,
+);
 let serverHandle = null;
 let mainWindow = null;
 let tray = null;
 let isQuitting = false;
+const hasSingleInstanceLock = app.requestSingleInstanceLock();
+
+const macTrayIconSvg = `
+<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+  <path d="M3 4.5h12M3 9h8M3 13.5h12" fill="none" stroke="#000" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="m11.5 6.8 2.4 2.2-2.4 2.2" fill="none" stroke="#000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>`;
 
 const trayIconSvg = `
 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
@@ -53,7 +62,10 @@ async function createWindow() {
 }
 
 function trayImage() {
-  return nativeImage.createFromDataURL(`data:image/svg+xml;base64,${Buffer.from(trayIconSvg).toString("base64")}`);
+  const svg = process.platform === "darwin" ? macTrayIconSvg : trayIconSvg;
+  const image = nativeImage.createFromDataURL(`data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}`);
+  if (process.platform === "darwin") image.setTemplateImage(true);
+  return image;
 }
 
 async function localThemes() {
@@ -109,29 +121,38 @@ async function createTray() {
   if (tray) return;
   tray = new Tray(trayImage());
   tray.setToolTip("Codex Theme Creator");
+  if (process.platform === "darwin") tray.setTitle("CTC");
   tray.on("click", () => void createWindow());
   await refreshTrayMenu();
 }
 
-app.whenReady().then(async () => {
-  serverHandle = await startThemeStudioServer({ port: 0 });
-  await createTray();
-  await createWindow();
-});
+if (!hasSingleInstanceLock) {
+  app.quit();
+} else {
+  app.on("second-instance", () => {
+    void createWindow();
+  });
 
-app.on("activate", () => {
-  void createWindow();
-});
+  app.whenReady().then(async () => {
+    serverHandle = await startThemeStudioServer({ port: 0 });
+    await createTray();
+    await createWindow();
+  });
 
-app.on("window-all-closed", () => {
-  // Keep the menu bar / system tray controller alive until the user quits from its menu.
-});
+  app.on("activate", () => {
+    void createWindow();
+  });
 
-app.on("before-quit", () => {
-  isQuitting = true;
-  if (serverHandle?.server?.listening) {
-    serverHandle.server.close();
-  }
-});
+  app.on("window-all-closed", () => {
+    // Keep the menu bar / system tray controller alive until the user quits from its menu.
+  });
 
-export const appRoot = here;
+  app.on("before-quit", () => {
+    isQuitting = true;
+    if (serverHandle?.server?.listening) {
+      serverHandle.server.close();
+    }
+  });
+}
+
+export { appRoot };

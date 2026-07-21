@@ -26,6 +26,8 @@ export function getPlatformConfig({
     canEditThemes: true,
     canSwitch: false,
     switchScript: null,
+    canRestoreDefault: false,
+    restoreScript: null,
     switchUnavailableReason: "当前平台还没有可用的 Codex 主题切换运行时。",
   };
   if (platform === "darwin") {
@@ -34,6 +36,8 @@ export function getPlatformConfig({
       label: "macOS",
       canSwitch: true,
       switchScript: path.join(repoRoot, "engine", "macos", "scripts", "switch-theme-macos.sh"),
+      canRestoreDefault: true,
+      restoreScript: path.join(repoRoot, "engine", "macos", "scripts", "restore-dream-skin-macos.sh"),
       switchUnavailableReason: null,
     };
   }

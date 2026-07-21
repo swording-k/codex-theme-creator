@@ -1,0 +1,31 @@
+:root { color-scheme: dark; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #080b10; color: #f4f6fa; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+.hero { min-height: 92vh; position: relative; overflow: hidden; display: grid; align-content: space-between; padding: 30px clamp(24px, 6vw, 96px) 72px; }
+.hero-art, .shade { position: absolute; inset: 0; width: 100%; height: 100%; }
+.hero-art { object-fit: cover; object-position: center; }
+.shade { background: linear-gradient(90deg, rgba(5, 10, 17, .92) 0%, rgba(5, 10, 17, .66) 44%, rgba(5, 10, 17, .16) 100%), linear-gradient(0deg, rgba(5, 10, 17, .78), transparent 55%); }
+nav, .hero-copy { position: relative; z-index: 1; }
+nav { display: flex; justify-content: space-between; font-size: 13px; letter-spacing: 0; }
+nav span, .eyebrow, figcaption { color: #55b6ff; }
+.hero-copy { width: min(620px, 100%); margin-top: auto; }
+.eyebrow { font-weight: 700; font-size: 13px; }
+h1 { font-size: clamp(46px, 7vw, 94px); line-height: 1; margin: 12px 0 20px; letter-spacing: 0; }
+.hero-copy > p:not(.eyebrow) { font-size: 20px; line-height: 1.6; max-width: 520px; color: #d3d9e4; }
+.cta { display: inline-block; color: #07111d; background: #e9f5ff; padding: 14px 18px; font-weight: 750; text-decoration: none; margin: 16px 0; border-radius: 5px; }
+small { display: block; color: #a6b0c0; }
+.statement, .flow, .truth { padding: 96px clamp(24px, 6vw, 96px); }
+.statement { background: #f5f8fb; color: #102032; font-size: clamp(30px, 5vw, 64px); line-height: 1.18; font-weight: 750; }
+.statement p { margin: 0; }
+.gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: #2b3442; }
+figure { position: relative; min-height: 360px; margin: 0; overflow: hidden; background: #121a24; }
+figure img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; transition: transform .45s ease; }
+figure:hover img { transform: scale(1.03); }
+figcaption { position: absolute; left: 20px; bottom: 18px; font-size: 12px; font-weight: 700; }
+.flow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 46px; background: #0d121a; }
+.flow b { color: #ff7543; font-size: 14px; }
+.flow h2, .truth h2 { font-size: 26px; margin: 18px 0 10px; }
+.flow p, .truth p { line-height: 1.7; color: #aeb8c7; }
+.truth { background: #14273c; }
+.truth p { max-width: 720px; font-size: 17px; }
+@media (max-width: 720px) { .hero { min-height: 86vh; padding-bottom: 48px; } .gallery, .flow { grid-template-columns: 1fr; } figure { min-height: 300px; } .statement, .flow, .truth { padding-top: 64px; padding-bottom: 64px; } }

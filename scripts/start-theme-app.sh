@@ -8,4 +8,8 @@ if [ ! -d node_modules ]; then
   npm install
 fi
 
-npm start
+if [ "$(uname -s)" = "Darwin" ]; then
+  open -n ./node_modules/electron/dist/Electron.app --args "$PWD"
+else
+  npm start
+fi

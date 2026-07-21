@@ -25,6 +25,7 @@ for (const property of [
   "--ds-task-opacity",
   "--dream-studio-bg-blur",
   "--dream-studio-bg-brightness",
+  "--dream-studio-bg-dim",
 ]) {
   assert.match(renderer, new RegExp(property), `renderer should map ${property}`);
 }
@@ -47,11 +48,26 @@ assert.match(css, /--dream-studio-bg-blur/, "studio background blur should be a 
 assert.match(injector, /const studio\s*=[\s\S]*backgroundBlur/, "injector should validate safe studio effect settings.");
 assert.match(injector, /theme\.studio\s*=/, "injector should preserve safe studio effect settings.");
 assert.match(css, /filter:\s*blur\(var\(--dream-studio-bg-blur\)\) brightness\(var\(--dream-studio-bg-brightness\)\)/, "studio background effects should apply to art layers.");
+assert.match(css, /body::before[\s\S]*--dream-studio-bg-blur/, "wide window backgrounds should also receive studio blur.");
+assert.match(css, /--dream-studio-bg-dim/, "studio background dim should be a visible runtime CSS variable.");
+assert.match(css, /body::after[\s\S]*--dream-studio-bg-dim/, "wide window backgrounds should receive a dim overlay, not brightness only.");
+assert.match(
+  css,
+  /data-dream-motion-profile="gt-broadcast"[\s\S]{0,260}main\.main-surface:not\(\.dream-skin-home-shell\) article[\s\S]{0,220}background:\s*rgb\(var\(--ds-panel-rgb\) \/ var\(--ds-task-opacity/,
+  "GT task message styling should honor the task opacity slider.",
+);
+assert.match(
+  css,
+  /data-feature="game-source"[\s\S]*word-break:\s*keep-all !important/,
+  "home title should not split Chinese words into ugly single-character final lines.",
+);
+assert.match(
+  css,
+  /data-feature="game-source"\] button[\s\S]*white-space:\s*nowrap !important/,
+  "project pill should stay intact inside the home title.",
+);
 for (const capability of [
   "aside.app-shell-left-panel",
-  "aside[class*=\"ml-auto\"][class*=\"h-full\"]",
-  "role=\"tabpanel\"",
-  "webview",
   "bg-token-list-hover-background",
   "group\\/home-suggestions button",
   "composer-surface-chrome",
@@ -68,10 +84,25 @@ assert.match(
   /data-dream-ui-profile="gt-control"[\s\S]*group\\\/home-suggestions button \*[\s\S]*color:\s*currentColor !important/,
   "GT suggestion card descendants should inherit a readable foreground.",
 );
-assert.match(
+assert.doesNotMatch(
   css,
-  /aside\[class\*="ml-auto"\]\[class\*="h-full"\][\s\S]*\[role="tabpanel"\][\s\S]*background:\s*rgb\(var\(--ds-panel-rgb\)/,
-  "right preview panel chrome should inherit theme panel colors.",
+  /aside\[class\*="ml-auto"\]\[class\*="h-full"\]/,
+  "theme CSS must not override Codex's right preview, document, or webview pane.",
+);
+assert.doesNotMatch(
+  css,
+  /main\.main-surface\s*\{[\s\S]{0,220}overflow:\s*hidden !important/,
+  "theme CSS must not clip native dialogs or new feature overlays in the main workspace.",
+);
+assert.doesNotMatch(
+  css,
+  /main\.main-surface:not\(\.dream-skin-home-shell\) > \*\s*\{[\s\S]{0,100}z-index:\s*1/,
+  "theme CSS must not force a stacking order on every native main-workspace child.",
+);
+assert.doesNotMatch(
+  css,
+  /body > \*\s*\{[\s\S]{0,100}z-index:\s*1/,
+  "theme CSS must not force native body portals behind its decorative layer.",
 );
 assert.match(
   css,

@@ -9,7 +9,7 @@
   "statusText": "DEEP WORK ONLINE",
   "quote": "CLEAR MIND, CLEAR CODE",
   "image": "background.jpg",
-  "appearance": "light",
+  "appearance": "dark",
   "art": {
     "focusX": 0.73,
     "focusY": 0.43,
@@ -17,16 +17,16 @@
     "taskMode": "ambient"
   },
   "colors": {
-    "background": "#edf3f4",
-    "panel": "#ffffff",
-    "panelAlt": "#e7eef1",
-    "accent": "#4f7f9f",
-    "accentAlt": "#6fa6c5",
-    "secondary": "#b58b63",
-    "highlight": "#d59b55",
-    "text": "#1f2b34",
-    "muted": "#60717b",
-    "line": "rgba(79, 127, 159, .22)"
+    "background": "#10191d",
+    "panel": "#19272d",
+    "panelAlt": "#263d47",
+    "accent": "#78b5d4",
+    "accentAlt": "#9ad0ea",
+    "secondary": "#d1a878",
+    "highlight": "#f0c27d",
+    "text": "#eff6f8",
+    "muted": "#bfced2",
+    "line": "rgba(120, 181, 212, .28)"
   },
   "ui": {
     "profile": "glass-studio",

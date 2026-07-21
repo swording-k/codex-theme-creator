@@ -1,14 +1,43 @@
 {
   "name": "codex-theme-creator-app",
   "version": "0.1.0",
+  "description": "A local Codex Desktop theme library and creator for macOS.",
+  "author": "Codex Theme Creator contributors",
   "private": true,
   "type": "module",
   "main": "main.mjs",
   "scripts": {
     "start": "electron .",
-    "test": "node tests/desktop-entry.test.mjs"
+    "test": "node tests/desktop-entry.test.mjs",
+    "dist": "electron-builder --mac dmg"
+  },
+  "build": {
+    "appId": "com.swordingk.codexthemecreator",
+    "productName": "Codex Theme Creator",
+    "icon": "build/icon.icns",
+    "asar": false,
+    "files": [
+      "main.mjs",
+      "package.json"
+    ],
+    "extraResources": [
+      { "from": "../theme-studio", "to": "theme-studio" },
+      { "from": "../engine", "to": "engine" },
+      { "from": "../scripts", "to": "scripts" },
+      { "from": "../skills", "to": "skills" },
+      { "from": "../dream-skin", "to": "dream-skin" }
+    ],
+    "mac": {
+      "category": "public.app-category.utilities",
+      "target": ["dmg"],
+      "artifactName": "Codex-Theme-Creator-${version}-${arch}.${ext}"
+    },
+    "dmg": {
+      "title": "Codex Theme Creator"
+    }
   },
   "devDependencies": {
-    "electron": "^31.7.7"
+    "electron": "^31.7.7",
+    "electron-builder": "^26.15.3"
   }
 }

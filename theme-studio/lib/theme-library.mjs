@@ -113,6 +113,23 @@ function summarizeTheme(theme, themeDir, source) {
   };
 }
 
+function canonicalThemeName(name) {
+  return String(name || "")
+    .toLowerCase()
+    .replace(/\bremix\b/g, "")
+    .replace(/\bmacbook\b/g, "")
+    .replace(/\bmy\s+(?:custom|tuned|tuning)\b/g, "")
+    .replace(/我的调校|我的定制|自定义调校/g, "")
+    .replace(/[^a-z0-9\u4e00-\u9fff]+/g, "")
+    .trim();
+}
+
+function isLocalPresetDuplicate(theme, presetKeys) {
+  if (theme.source !== "local") return false;
+  if (!/^(private|studio)-/.test(theme.id)) return false;
+  return presetKeys.has(canonicalThemeName(theme.name));
+}
+
 async function readThemeSummaries(root, source) {
   if (!(await pathExists(root))) return [];
   const entries = await fs.readdir(root, { withFileTypes: true });
@@ -137,8 +154,12 @@ async function readThemeSummaries(root, source) {
 export async function discoverThemes({ repoRoot, themesRoot = DEFAULT_THEMES_ROOT }) {
   const presets = await readThemeSummaries(path.join(repoRoot, "dream-skin"), "preset");
   const installed = await readThemeSummaries(themesRoot, "local");
+  const presetKeys = new Set(presets.map((theme) => canonicalThemeName(theme.name)).filter(Boolean));
   const byId = new Map();
-  for (const theme of [...presets, ...installed]) byId.set(theme.id, theme);
+  for (const theme of [...presets, ...installed]) {
+    if (isLocalPresetDuplicate(theme, presetKeys)) continue;
+    byId.set(theme.id, theme);
+  }
   return [...byId.values()].sort((a, b) => {
     const sourceWeight = { local: 0, preset: 1 };
     return (sourceWeight[a.source] ?? 5) - (sourceWeight[b.source] ?? 5) ||
