@@ -77,6 +77,9 @@ async function pathExists(file) {
 export async function readTheme(themeDir) {
   const theme = await readJson(path.join(themeDir, "theme.json"));
   assertThemeId(theme.id);
+  if (typeof theme.image !== "string" || !theme.image || path.basename(theme.image) !== theme.image) {
+    throw new Error("Invalid theme image");
+  }
   return theme;
 }
 

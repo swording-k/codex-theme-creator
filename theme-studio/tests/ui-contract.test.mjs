@@ -18,12 +18,16 @@ for (const requiredControl of ["backgroundBlur", "backgroundDim", "homeOpacity",
 }
 
 assert.match(html, /让 Codex 创作新主题/, "app has a clear Codex creation entry");
+assert.match(html, /id="exportTheme"/, "app can export a selected theme as a portable package");
+assert.match(html, /id="importTheme"/, "app can import a portable theme package");
 assert.match(html, /安装创作助手/, "app can install the real Codex creation Skill instead of implying a copied prompt is enough");
 assert.match(html, /id="themePreview"/, "app has an in-app theme preview");
 assert.match(html, /用户主题放哪里/, "app explains where user-created themes live");
 assert.match(html, /请先在 Codex 设置中使用深色外观/, "app makes the dark-mode compatibility requirement explicit");
 assert.match(app, /copyCreatePrompt/, "creation entry copies the Codex prompt");
 assert.match(app, /loadCreatorStatus/, "app checks the creation Skill before offering the Codex prompt");
+assert.match(app, /exportThemePackage/, "app downloads a portable theme package");
+assert.match(app, /importThemePackage/, "app imports a user-selected theme package");
 assert.match(app, /applyLocalPreview/, "sliders update the in-app preview immediately");
 assert.doesNotMatch(app, /\/api\/preview/, "sliders should not trigger the unstable Codex live-preview endpoint on every drag");
 assert.match(html, /点击“保存并启用”后才会写入 Codex/, "UI should explain when slider settings reach Codex");

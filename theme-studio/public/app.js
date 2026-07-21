@@ -138,10 +138,12 @@ function setControlsEnabled(enabled) {
   for (const input of controls.elements) input.disabled = !enabled;
   const theme = selectedTheme();
   const saveButton = document.querySelector("#saveTheme");
+  const exportButton = document.querySelector("#exportTheme");
   const applyButton = document.querySelector("#applyTheme");
   const switchButton = document.querySelector("#switchTheme");
   const native = isDefaultTheme(theme);
   saveButton.disabled = !enabled || native;
+  exportButton.disabled = !enabled || native;
   applyButton.disabled = !state.platform?.canSwitch;
   applyButton.textContent = native ? "恢复 Codex 默认" : "保存并启用";
   switchButton.disabled = !state.platform?.canSwitch || native;
@@ -359,6 +361,44 @@ async function copyCreatePrompt() {
   }
 }
 
+function filenameFromDisposition(header) {
+  const match = /filename="?([^";]+)"?/i.exec(header || "");
+  return match?.[1] || "codex-theme.ctheme";
+}
+
+async function exportThemePackage() {
+  const theme = selectedTheme();
+  if (!theme || isDefaultTheme(theme)) return;
+  setStatus("正在导出主题包...");
+  const response = await fetch(`/api/export?id=${encodeURIComponent(theme.id)}`);
+  if (!response.ok) {
+    const body = await response.json().catch(() => ({}));
+    throw new Error(body.error || "导出主题失败");
+  }
+  const blob = await response.blob();
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = filenameFromDisposition(response.headers.get("content-disposition"));
+  link.click();
+  URL.revokeObjectURL(link.href);
+  setStatus(`已导出 ${theme.name}。把 .ctheme 文件发给朋友即可。`);
+}
+
+async function importThemePackage(file) {
+  if (!file) return;
+  if (file.size > 20 * 1024 * 1024) throw new Error("主题包不能超过 20 MB");
+  setStatus("正在校验并导入主题包...");
+  const response = await fetch("/api/import", {
+    method: "POST",
+    headers: { "content-type": "application/octet-stream" },
+    body: await file.arrayBuffer(),
+  });
+  const body = await response.json();
+  if (!response.ok) throw new Error(body.error || "导入主题失败");
+  await loadThemes({ preferredIds: [body.theme.id] });
+  setStatus(`已导入 ${body.theme.name}，现在可以预览、微调或启用。`);
+}
+
 async function switchTheme() {
   const theme = selectedTheme();
   if (!theme) return;
@@ -383,6 +423,12 @@ document.querySelector("#createWithCodex").addEventListener("click", copyCreateP
 document.querySelector("#installCreator").addEventListener("click", installCreator);
 document.querySelector("#copyPrompt").addEventListener("click", copyCreatePrompt);
 document.querySelector("#saveTheme").addEventListener("click", saveTheme);
+document.querySelector("#exportTheme").addEventListener("click", () => exportThemePackage().catch((error) => setStatus(error.message)));
+document.querySelector("#importTheme").addEventListener("click", () => document.querySelector("#importFile").click());
+document.querySelector("#importFile").addEventListener("change", (event) => {
+  importThemePackage(event.target.files?.[0]).catch((error) => setStatus(error.message));
+  event.target.value = "";
+});
 document.querySelector("#applyTheme").addEventListener("click", applyTheme);
 document.querySelector("#switchTheme").addEventListener("click", switchTheme);
 controls.addEventListener("input", scheduleLivePreview);

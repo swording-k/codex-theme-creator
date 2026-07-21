@@ -14,6 +14,7 @@ import {
   updateStudioTheme,
 } from "./lib/theme-library.mjs";
 import { getPlatformConfig } from "./lib/platform.mjs";
+import { exportThemeArchive, importThemeArchive } from "./lib/theme-archive.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(here, "..");
@@ -92,6 +93,17 @@ async function readBody(req) {
   for await (const chunk of req) chunks.push(chunk);
   if (Buffer.concat(chunks).length > 256 * 1024) throw new Error("Request body is too large");
   return chunks.length ? JSON.parse(Buffer.concat(chunks).toString("utf8")) : {};
+}
+
+async function readBinaryBody(req, maxBytes = 20 * 1024 * 1024) {
+  const chunks = [];
+  let size = 0;
+  for await (const chunk of req) {
+    size += chunk.length;
+    if (size > maxBytes) throw new Error("Theme package is too large");
+    chunks.push(chunk);
+  }
+  return Buffer.concat(chunks);
 }
 
 async function serveStatic(req, res) {
@@ -227,6 +239,25 @@ async function handleApi(req, res) {
       "cache-control": "no-store",
     });
     res.end(data);
+    return;
+  }
+  if (req.method === "GET" && url.pathname === "/api/export") {
+    const theme = await findThemeById(url.searchParams.get("id"));
+    const archive = await exportThemeArchive({ themeDir: theme.themeDir });
+    res.writeHead(200, {
+      "content-type": "application/octet-stream",
+      "content-disposition": `attachment; filename="${archive.filename}"`,
+      "cache-control": "no-store",
+    });
+    res.end(archive.data);
+    return;
+  }
+  if (req.method === "POST" && url.pathname === "/api/import") {
+    const imported = await importThemeArchive({
+      archive: await readBinaryBody(req),
+      themesRoot: platformConfig.themesRoot,
+    });
+    sendJson(res, 201, { theme: { ...imported.theme, themeDir: imported.themeDir } });
     return;
   }
   if (req.method === "POST" && url.pathname === "/api/studio-themes") {
