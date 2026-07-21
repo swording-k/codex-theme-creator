@@ -28,11 +28,12 @@ assert.match(main, /Menu\.buildFromTemplate/, "tray icon has a native context me
 assert.match(main, /setContextMenu/, "tray menu is attached to the tray icon");
 assert.doesNotMatch(main, /nativeImage\.createEmpty\(\)/, "macOS tray must use a visible icon, not an empty placeholder");
 assert.match(main, /setTemplateImage\(true\)/, "macOS tray icon should render as a native menu bar template image");
-assert.match(main, /tray\.setTitle\("CTC"\)/, "macOS tray should pair the icon with a readable short title");
+assert.doesNotMatch(main, /tray\.setTitle\(/, "macOS tray should use the product mark instead of a letter label");
 assert.match(main, /requestSingleInstanceLock/, "desktop app should avoid multiple stale controllers");
 assert.match(main, /second-instance/, "launching again should focus the existing controller");
 assert.match(main, /\/api\/themes/, "tray menu can read the local theme library");
-assert.match(main, /\/api\/switch/, "tray menu can switch saved local themes");
+assert.match(main, /\/api\/quick-switch/, "tray menu can switch both saved and bundled themes");
+assert.match(main, /恢复 Codex 默认外观/, "tray menu exposes the native Codex reset action");
 assert.match(main, /event\.preventDefault\(\)/, "closing the window hides it to the tray instead of quitting");
 await fs.access(path.join(repoRoot, "scripts", "start-theme-app.sh"));
 await fs.access(path.join(repoRoot, "scripts", "start-theme-app.ps1"));

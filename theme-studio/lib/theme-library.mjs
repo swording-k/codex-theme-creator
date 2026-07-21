@@ -126,7 +126,7 @@ function canonicalThemeName(name) {
 
 function isLocalPresetDuplicate(theme, presetKeys) {
   if (theme.source !== "local") return false;
-  if (!/^(private|studio)-/.test(theme.id)) return false;
+  if (!/^(private|studio|quick)-/.test(theme.id)) return false;
   return presetKeys.has(canonicalThemeName(theme.name));
 }
 
@@ -236,6 +236,20 @@ export async function createStudioTheme({ baseThemeDir, themesRoot = DEFAULT_THE
   if (!theme.image) throw new Error("Base theme does not declare an image");
   const sourceImage = path.join(baseThemeDir, theme.image);
   await fs.copyFile(sourceImage, path.join(themeDir, theme.image));
+  await fs.writeFile(path.join(themeDir, "theme.json"), `${JSON.stringify(theme, null, 2)}\n`);
+  return { id, themeDir, theme };
+}
+
+export async function ensureQuickTheme({ baseThemeDir, themesRoot = DEFAULT_THEMES_ROOT }) {
+  const baseTheme = await readTheme(baseThemeDir);
+  const id = `quick-${baseTheme.id}`;
+  const themeDir = resolveThemeDirectory(themesRoot, id);
+  await fs.mkdir(themeDir, { recursive: true });
+  const theme = structuredClone(baseTheme);
+  theme.id = id;
+  theme.studio = { ...(theme.studio || {}), version: 1, quickPreset: true, baseThemeId: baseTheme.id };
+  if (!theme.image) throw new Error("Base theme does not declare an image");
+  await fs.copyFile(path.join(baseThemeDir, theme.image), path.join(themeDir, theme.image));
   await fs.writeFile(path.join(themeDir, "theme.json"), `${JSON.stringify(theme, null, 2)}\n`);
   return { id, themeDir, theme };
 }

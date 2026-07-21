@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 
 import {
   LIVE_PREVIEW_THEME_ID,
+  ensureQuickTheme,
   createStudioTheme,
   createLivePreviewTheme,
   discoverThemes,
@@ -184,6 +185,18 @@ assert.equal(
   visibleAfterPreview.some((theme) => theme.id === LIVE_PREVIEW_THEME_ID),
   false,
   "live preview should not clutter the visible theme list",
+);
+
+const quick = await ensureQuickTheme({
+  baseThemeDir: path.join(repoRoot, "dream-skin", "preset-porsche-gt3rs"),
+  themesRoot,
+});
+assert.equal(quick.id, "quick-preset-porsche-gt3rs", "quick preset copy uses a stable id for tray switching");
+const visibleAfterQuick = await discoverThemes({ repoRoot, themesRoot });
+assert.equal(
+  visibleAfterQuick.some((theme) => theme.id === quick.id),
+  false,
+  "tray-only quick preset copies do not duplicate the App theme grid",
 );
 
 const updated = await updateStudioTheme({

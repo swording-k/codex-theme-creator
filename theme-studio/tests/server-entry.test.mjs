@@ -13,6 +13,7 @@ assert.match(serverSource, /visibleId:\s*saved\.id/, "applying a preset should k
 assert.match(serverSource, /\/api\/restore-default/, "server should expose a real default Codex restore action");
 assert.match(serverSource, /\/api\/creator-status/, "server should report whether the real Codex creation Skill is installed");
 assert.match(serverSource, /\/api\/install-creator-skill/, "server should expose a one-click creator Skill installer");
+assert.match(serverSource, /\/api\/quick-switch/, "server should allow the tray to apply bundled presets directly");
 
 const server = serverModule.createThemeStudioServer();
 assert.equal(typeof server.listen, "function", "factory returns an HTTP server");

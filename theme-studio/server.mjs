@@ -9,6 +9,7 @@ import {
   createLivePreviewTheme,
   createStudioTheme,
   discoverThemes,
+  ensureQuickTheme,
   themeAssetPath,
   updateStudioTheme,
 } from "./lib/theme-library.mjs";
@@ -290,6 +291,16 @@ async function handleApi(req, res) {
     }
     await switchTheme(theme.id);
     sendJson(res, 200, { ok: true, id: theme.id });
+    return;
+  }
+  if (req.method === "POST" && url.pathname === "/api/quick-switch") {
+    const body = await readBody(req);
+    const theme = await findThemeById(body.id);
+    const target = theme.source === "preset"
+      ? await ensureQuickTheme({ baseThemeDir: theme.themeDir, themesRoot: platformConfig.themesRoot })
+      : theme;
+    await switchTheme(target.id);
+    sendJson(res, 200, { ok: true, id: target.id, name: theme.name });
     return;
   }
   sendJson(res, 404, { error: "Not found" });

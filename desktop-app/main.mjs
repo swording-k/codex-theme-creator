@@ -15,15 +15,15 @@ const hasSingleInstanceLock = app.requestSingleInstanceLock();
 
 const macTrayIconSvg = `
 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
-  <path d="M3 4.5h12M3 9h8M3 13.5h12" fill="none" stroke="#000" stroke-width="1.8" stroke-linecap="round"/>
-  <path d="m11.5 6.8 2.4 2.2-2.4 2.2" fill="none" stroke="#000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="m6.4 4.1-3.1 4.9 3.1 4.9M11.6 4.1l3.1 4.9-3.1 4.9" fill="none" stroke="#000" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M9 6.35v5.3M6.35 9h5.3" fill="none" stroke="#000" stroke-width="1.45" stroke-linecap="round"/>
 </svg>`;
 
 const trayIconSvg = `
 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
-  <rect width="32" height="32" rx="8" fill="#111820"/>
-  <path d="M8 10.5h16M8 16h11.5M8 21.5h16" stroke="#f2f6fb" stroke-width="2.4" stroke-linecap="round"/>
-  <path d="M22.2 13.3l2.7 2.7-2.7 2.7" fill="none" stroke="#ff7a3d" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect width="32" height="32" rx="9" fill="#0b1421"/>
+  <path d="m11.7 7.3-5 8.7 5 8.7M20.3 7.3l5 8.7-5 8.7" fill="none" stroke="#eaf4ff" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M16 11.3v9.4M11.3 16h9.4" fill="none" stroke="#58b8ff" stroke-width="2.35" stroke-linecap="round"/>
 </svg>`;
 
 async function createWindow() {
@@ -68,13 +68,13 @@ function trayImage() {
   return image;
 }
 
-async function localThemes() {
+async function availableThemes() {
   if (!serverHandle?.url) return [];
   try {
     const response = await fetch(new URL("/api/themes", serverHandle.url));
     if (!response.ok) return [];
     const body = await response.json();
-    return Array.isArray(body.themes) ? body.themes.filter((theme) => theme.source === "local") : [];
+    return Array.isArray(body.themes) ? body.themes : [];
   } catch {
     return [];
   }
@@ -82,7 +82,7 @@ async function localThemes() {
 
 async function switchTheme(id) {
   if (!serverHandle?.url) return;
-  await fetch(new URL("/api/switch", serverHandle.url), {
+  await fetch(new URL("/api/quick-switch", serverHandle.url), {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({ id }),
@@ -91,7 +91,7 @@ async function switchTheme(id) {
 
 async function refreshTrayMenu() {
   if (!tray) return;
-  const themes = await localThemes();
+  const themes = await availableThemes();
   const themeItems = themes.slice(0, 8).map((theme) => ({
     label: theme.name || theme.id,
     click: async () => {
@@ -101,11 +101,15 @@ async function refreshTrayMenu() {
   }));
   tray.setContextMenu(Menu.buildFromTemplate([
     { label: "打开主题管理器", click: () => void createWindow() },
+    { label: "恢复 Codex 默认外观", click: async () => {
+      await fetch(new URL("/api/restore-default", serverHandle.url), { method: "POST" });
+      await refreshTrayMenu();
+    } },
     { label: "刷新主题列表", click: () => void refreshTrayMenu() },
     { type: "separator" },
     themeItems.length
       ? { label: "快速切换主题", submenu: themeItems }
-      : { label: "还没有可快捷切换的本地主题", enabled: false },
+      : { label: "还没有可用主题", enabled: false },
     { type: "separator" },
     {
       label: "退出 Codex Theme Creator",
@@ -121,7 +125,6 @@ async function createTray() {
   if (tray) return;
   tray = new Tray(trayImage());
   tray.setToolTip("Codex Theme Creator");
-  if (process.platform === "darwin") tray.setTitle("CTC");
   tray.on("click", () => void createWindow());
   await refreshTrayMenu();
 }
