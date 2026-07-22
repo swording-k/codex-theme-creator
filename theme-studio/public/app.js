@@ -27,6 +27,9 @@ const state = {
   drafts: savedSession.drafts,
   platform: null,
   creator: null,
+  pets: [],
+  pendingPetRestartId: null,
+  view: "themes",
 };
 
 const grid = document.querySelector("#themeGrid");
@@ -40,6 +43,14 @@ const previewTitle = document.querySelector("#previewTitle");
 const creatorStatusEl = document.querySelector("#creatorStatus");
 const createWithCodexButton = document.querySelector("#createWithCodex");
 const installCreatorButton = document.querySelector("#installCreator");
+const petGrid = document.querySelector("#petGrid");
+const petContent = document.querySelector("#petContent");
+const themeContent = document.querySelector("#themeContent");
+const themeSidebarActions = document.querySelector("#themeSidebarActions");
+const workspaceTitle = document.querySelector("#workspaceTitle");
+const themeActions = [...document.querySelectorAll(".theme-action")];
+const showThemesButton = document.querySelector("#showThemes");
+const showPetsButton = document.querySelector("#showPets");
 
 function isDefaultTheme(theme = selectedTheme()) {
   return theme?.id === DEFAULT_THEME.id;
@@ -85,6 +96,19 @@ function settingsFromForm() {
 
 function setStatus(message) {
   statusEl.textContent = message;
+}
+
+function setView(view) {
+  state.view = view;
+  const pets = view === "pets";
+  themeContent.hidden = pets;
+  petContent.hidden = !pets;
+  themeSidebarActions.hidden = pets;
+  for (const action of themeActions) action.hidden = pets;
+  showThemesButton.setAttribute("aria-selected", String(!pets));
+  showPetsButton.setAttribute("aria-selected", String(pets));
+  workspaceTitle.textContent = pets ? "宠物管理" : "主题库";
+  if (pets) void loadPets();
 }
 
 function controlsDisabled() {
@@ -239,6 +263,71 @@ async function loadThemes({ preferredIds = [] } = {}) {
   renderThemes();
   syncControls(selectedTheme());
   setStatus(`已读取 ${state.themes.length} 套主题。`);
+}
+
+function renderPets() {
+  petGrid.innerHTML = "";
+  if (!state.pets.length) {
+    petGrid.innerHTML = '<p class="empty-state">还没有发现有效的本机宠物包。</p>';
+    return;
+  }
+  for (const pet of state.pets) {
+    const card = document.createElement("article");
+    card.className = `pet-card${pet.isSelected ? " is-selected" : ""}`;
+    card.innerHTML = `
+      <div class="pet-art" role="img" aria-label="${escapeHtml(pet.displayName)} 的精灵图" style="background-image: url('/api/pet-asset?id=${encodeURIComponent(pet.id)}')"></div>
+      <div class="pet-details">
+        <h3>${escapeHtml(pet.displayName)}</h3>
+        <p>${escapeHtml(pet.description || "本机 Codex 宠物包")}</p>
+        <small>v${pet.spriteVersionNumber || "?"} · ${escapeHtml(pet.id)}</small>
+      </div>
+      <div class="pet-actions">
+        ${pet.isSelected
+          ? (state.pendingPetRestartId === pet.id
+            ? `<button type="button" class="pet-restart" ${state.platform?.canRestartCodex ? "" : "disabled"}>这次需要重启后显示</button>`
+            : '<span class="pet-active" aria-label="当前上场宠物">当前上场</span>')
+          : '<button type="button" class="pet-select">设为上场</button>'}
+        <button type="button" class="pet-remove">移除</button>
+      </div>
+    `;
+    card.querySelector(".pet-select")?.addEventListener("click", () => selectPet(pet));
+    card.querySelector(".pet-restart")?.addEventListener("click", () => restartCodex(pet));
+    card.querySelector(".pet-remove").addEventListener("click", () => removePet(pet));
+    petGrid.appendChild(card);
+  }
+}
+
+async function selectPet(pet) {
+  setStatus(`正在让 ${pet.displayName} 即时上场...`);
+  const body = await requestJson(`/api/pets/${encodeURIComponent(pet.id)}/select`, { method: "POST", body: JSON.stringify({}) });
+  state.pendingPetRestartId = body.activation === "restart-required" ? pet.id : null;
+  await loadPets();
+  setStatus(body.activation === "live"
+    ? `${pet.displayName} 已即时上场，当前主题保持不变。`
+    : `${pet.displayName} 已保存。Codex 当前没有可用的实时连接，仅这次需要重启后显示。`);
+}
+
+async function restartCodex(pet) {
+  if (!window.confirm("这会关闭并重新打开 ChatGPT / Codex。请先保存正在进行的内容。现在继续吗？")) return;
+  setStatus(`正在重启 Codex，让 ${pet.displayName} 上场...`);
+  await requestJson("/api/restart-codex", { method: "POST", body: JSON.stringify({}) });
+  setStatus("Codex 正在重新打开。回到 Codex 后即可看到新的上场宠物。");
+}
+
+async function loadPets() {
+  setStatus("正在读取本机宠物库...");
+  const body = await requestJson("/api/pets");
+  state.pets = body.pets;
+  renderPets();
+  setStatus(`已读取 ${state.pets.length} 个本机宠物包。`);
+}
+
+async function removePet(pet) {
+  if (!window.confirm(`移除“${pet.displayName}”吗？这只会删除该宠物包，不能撤销。`)) return;
+  setStatus(`正在移除 ${pet.displayName}...`);
+  await requestJson(`/api/pets/${encodeURIComponent(pet.id)}`, { method: "DELETE" });
+  await loadPets();
+  setStatus(`已移除 ${pet.displayName}。`);
 }
 
 function renderCreatorStatus() {
@@ -419,6 +508,8 @@ async function switchTheme() {
 }
 
 document.querySelector("#refresh").addEventListener("click", loadThemes);
+showPetsButton.addEventListener("click", () => setView("pets"));
+showThemesButton.addEventListener("click", () => setView("themes"));
 document.querySelector("#feedbackLink").addEventListener("click", () => {
   window.open("https://github.com/swording-k/codex-theme-creator/issues/new?template=feedback.yml", "_blank", "noopener");
 });
@@ -432,8 +523,12 @@ document.querySelector("#importFile").addEventListener("change", (event) => {
   importThemePackage(event.target.files?.[0]).catch((error) => setStatus(error.message));
   event.target.value = "";
 });
-document.querySelector("#applyTheme").addEventListener("click", applyTheme);
-document.querySelector("#switchTheme").addEventListener("click", switchTheme);
+document.querySelector("#applyTheme").addEventListener("click", () => {
+  applyTheme().catch((error) => setStatus("主题已保存，但没有启用：" + error.message));
+});
+document.querySelector("#switchTheme").addEventListener("click", () => {
+  switchTheme().catch((error) => setStatus("主题没有启用：" + error.message));
+});
 controls.addEventListener("input", scheduleLivePreview);
 controls.addEventListener("change", scheduleLivePreview);
 

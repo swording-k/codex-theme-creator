@@ -12,6 +12,12 @@ const switcher = await fs.readFile(path.join(windowsRoot, "scripts", "switch-the
 const restore = await fs.readFile(path.join(windowsRoot, "scripts", "restore-theme-windows.ps1"), "utf8");
 
 assert.match(common, /Get-AppxPackage/, "runtime discovers the Microsoft Store ChatGPT package");
+assert.match(common, /Test-StorePackagedCodex/, "runtime identifies Store-packaged Codex before reporting a launch failure");
+assert.match(common, /Microsoft Store 版 Codex/, "Store installations receive a clear user-facing compatibility explanation");
+const storeCheck = common.indexOf("Test-StorePackagedCodex -ExecutablePath $executable");
+const storeFailure = common.indexOf("if ($isStorePackaged)", storeCheck);
+const stopCall = common.indexOf("Stop-ChatGPTProcesses", storeCheck);
+assert.ok(storeCheck >= 0 && storeFailure > storeCheck && stopCall > storeFailure, "Store compatibility must be checked before any Codex process is closed");
 assert.match(common, /ChatGPT\.exe|Codex\.exe/, "runtime supports current and legacy executable names");
 assert.match(common, /127\.0\.0\.1/, "runtime binds CDP to loopback only");
 assert.match(common, /remote-debugging-address=127\.0\.0\.1/, "ChatGPT is launched with a loopback-only debugger");

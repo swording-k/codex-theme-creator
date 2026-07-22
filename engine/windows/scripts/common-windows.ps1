@@ -78,6 +78,11 @@ function Test-ThemeCdp {
   }
 }
 
+function Test-StorePackagedCodex {
+  param([string]$ExecutablePath)
+  return $ExecutablePath -match "\\Program Files\\WindowsApps\\"
+}
+
 function Stop-ChatGPTProcesses {
   Get-CimInstance Win32_Process -ErrorAction SilentlyContinue |
     Where-Object { $_.Name -in @("ChatGPT.exe", "Codex.exe") } |
@@ -95,6 +100,10 @@ function Start-ChatGPTWithCdp {
   param([int]$Port = 9341)
   if (Test-ThemeCdp -Port $Port) { return (Get-ChatGPTExecutable) }
   $executable = Get-ChatGPTExecutable
+  $isStorePackaged = Test-StorePackagedCodex -ExecutablePath $executable
+  if ($isStorePackaged) {
+    throw "当前安装的是 Microsoft Store 版 Codex。它不会接受主题运行时所需的本地启动参数；为保护你正在进行的对话，本 App 不会关闭 Codex。请改用官网独立安装版 Codex 后再启用主题。"
+  }
   Stop-ChatGPTProcesses
   Start-Process -FilePath $executable -ArgumentList @(
     "--remote-debugging-address=127.0.0.1",

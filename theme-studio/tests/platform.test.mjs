@@ -14,6 +14,8 @@ assert.equal(
   path.join("/Users/alice", "Library", "Application Support", "CodexDreamSkinStudio", "themes"),
 );
 assert.equal(mac.canSwitch, true);
+assert.equal(mac.petsRoot, path.join("/Users/alice", ".codex", "pets"));
+assert.equal(mac.canRestartCodex, true);
 assert.equal(mac.switchScript, path.join("/repo", "engine", "macos", "scripts", "switch-theme-macos.sh"));
 
 const win = getPlatformConfig({
@@ -27,6 +29,7 @@ assert.equal(
   path.win32.join("C:\\Users\\Alice\\AppData\\Roaming", "CodexDreamSkinStudio", "themes"),
 );
 assert.equal(win.canSwitch, true);
+assert.equal(win.petsRoot, path.win32.join("C:\\Users\\Alice", ".codex", "pets"));
 assert.equal(win.canRestoreDefault, true);
 assert.equal(
   win.switchScript,
@@ -37,6 +40,7 @@ assert.equal(
   path.win32.join("C:\\repo", "engine", "windows", "scripts", "restore-theme-windows.ps1"),
 );
 assert.equal(win.switchIdArgument, "-ThemeId");
+assert.equal(win.canRestartCodex, false, "Windows restart stays unavailable until a real VM flow proves it");
 assert.equal(win.switchUnavailableReason, null);
 
 const linux = getPlatformConfig({

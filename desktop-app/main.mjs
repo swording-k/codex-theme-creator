@@ -19,6 +19,8 @@ let tray = null;
 let isQuitting = false;
 let updateCheckInFlight = false;
 let interactiveUpdateCheck = false;
+const pendingThemeFiles = [];
+const MAX_THEME_ARCHIVE_BYTES = 20 * 1024 * 1024;
 const hasSingleInstanceLock = app.requestSingleInstanceLock();
 
 const macTrayIconSvg = `
@@ -67,6 +69,53 @@ async function createWindow() {
     }
   });
   await mainWindow.loadURL(serverHandle.url);
+}
+
+function isThemeArchivePath(filePath) {
+  return typeof filePath === "string" && path.extname(filePath).toLowerCase() === ".ctheme";
+}
+
+async function importThemeFile(filePath) {
+  if (!isThemeArchivePath(filePath)) return;
+  try {
+    if (!serverHandle) serverHandle = await startThemeStudioServer({ port: 0 });
+    const archivePath = path.resolve(filePath);
+    const stats = await fs.stat(archivePath);
+    if (!stats.isFile() || stats.size < 1 || stats.size > MAX_THEME_ARCHIVE_BYTES) {
+      throw new Error("主题包必须是小于 20 MB 的 .ctheme 文件。");
+    }
+    const response = await fetch(new URL("/api/import", serverHandle.url), {
+      method: "POST",
+      headers: { "content-type": "application/octet-stream" },
+      body: await fs.readFile(archivePath),
+    });
+    const body = await response.json();
+    if (!response.ok) throw new Error(body.error || "主题包导入失败。");
+    await createWindow();
+    mainWindow.webContents.reload();
+    await dialog.showMessageBox(mainWindow, {
+      type: "info",
+      title: "主题已导入",
+      message: `“${body.theme.name}”已加入本机主题库。`,
+      detail: "现在可以在主题库中预览、微调或启用。",
+    });
+  } catch (error) {
+    await dialog.showMessageBox(mainWindow, {
+      type: "error",
+      title: "无法导入主题",
+      message: "这个 .ctheme 文件没有通过主题包校验。",
+      detail: error.message,
+    });
+  }
+}
+
+function openThemeFile(filePath) {
+  if (!isThemeArchivePath(filePath)) return;
+  if (!app.isReady()) {
+    pendingThemeFiles.push(filePath);
+    return;
+  }
+  void importThemeFile(filePath);
 }
 
 async function ensureBundledCreatorSkill() {
@@ -219,15 +268,23 @@ async function createTray() {
   if (tray) return;
   tray = new Tray(trayImage());
   tray.setToolTip("Codex Theme Creator");
-  tray.on("click", () => void createWindow());
+  // The menu bar is primarily for switching themes without opening the studio.
+  tray.on("click", () => tray.popUpContextMenu());
   await refreshTrayMenu();
 }
 
 if (!hasSingleInstanceLock) {
   app.quit();
 } else {
-  app.on("second-instance", () => {
-    void createWindow();
+  app.on("open-file", (event, filePath) => {
+    event.preventDefault();
+    openThemeFile(filePath);
+  });
+
+  app.on("second-instance", (_event, commandLine) => {
+    const archive = commandLine.find(isThemeArchivePath);
+    if (archive) openThemeFile(archive);
+    else void createWindow();
   });
 
   app.whenReady().then(async () => {
@@ -240,6 +297,9 @@ if (!hasSingleInstanceLock) {
     serverHandle = await startThemeStudioServer({ port: 0 });
     await createTray();
     await createWindow();
+    for (const archive of pendingThemeFiles.splice(0)) await importThemeFile(archive);
+    const launchedArchive = process.argv.find(isThemeArchivePath);
+    if (launchedArchive) await importThemeFile(launchedArchive);
     configureAutoUpdates();
   });
 

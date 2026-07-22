@@ -15,32 +15,36 @@
           <p class="lede">让 Codex 负责创作主题，这里负责收藏、微调、保存和切换。</p>
           <p class="compatibility-note">兼容提示：请先在 Codex 设置中使用深色外观。主题不修改 Codex 原生外观设置，以免影响文档、预览和弹窗。</p>
         </div>
-        <div class="sidebar-actions">
+        <nav class="product-nav" role="tablist" aria-label="管理内容">
+          <button id="showThemes" class="nav-item" type="button" role="tab" aria-selected="true">主题</button>
+          <button id="showPets" class="nav-item" type="button" role="tab" aria-selected="false">宠物</button>
+        </nav>
+        <div class="sidebar-actions" id="themeSidebarActions">
           <button class="primary" id="createWithCodex">让 Codex 创作新主题</button>
           <button id="installCreator">安装创作助手</button>
           <p class="creator-status" id="creatorStatus">正在检查创作助手...</p>
           <button id="refresh">刷新主题列表</button>
           <button id="feedbackLink">提交反馈</button>
-          <p class="sidebar-note">创作成功后会自动出现在主题库。手动导入时，把包含 <code>theme.json</code> 和背景图的完整文件夹放进本机主题库。</p>
+          <p class="sidebar-note">创作成功后会自动出现在主题库。分享主题时，直接发送导出的 <code>.ctheme</code> 文件即可。</p>
         </div>
       </aside>
 
       <section class="workspace">
         <header class="toolbar">
           <div>
-            <h2>主题库</h2>
+            <h2 id="workspaceTitle">主题库</h2>
             <p id="status">正在读取本机主题库...</p>
             <p class="platform" id="platformStatus"></p>
           </div>
-          <button id="saveTheme">保存为我的主题</button>
-          <button id="exportTheme">导出主题</button>
-          <button id="importTheme">导入主题</button>
+          <button class="theme-action" id="saveTheme">保存为我的主题</button>
+          <button class="theme-action" id="exportTheme">导出主题</button>
+          <button class="theme-action" id="importTheme">导入主题</button>
           <input id="importFile" type="file" accept=".ctheme,.zip,application/zip" hidden>
-          <button id="applyTheme" class="accent">保存并启用</button>
-          <button id="switchTheme" class="accent">启用当前主题</button>
+          <button class="theme-action accent" id="applyTheme">保存并启用</button>
+          <button class="theme-action accent" id="switchTheme">启用当前主题</button>
         </header>
 
-        <div class="content">
+        <div class="content" id="themeContent">
           <div class="library-pane">
             <section class="creator-panel">
               <div>
@@ -105,6 +109,16 @@
             </div>
           </form>
         </div>
+        <section class="pet-content" id="petContent" hidden>
+          <div class="pet-header">
+            <div>
+              <p class="eyebrow">Codex Pets</p>
+              <h3>本机宠物库</h3>
+              <p>这里只管理已安装的宠物包，不会改变 Codex 当前显示的宠物。</p>
+            </div>
+          </div>
+          <div class="pet-grid" id="petGrid"></div>
+        </section>
       </section>
     </main>
     <script type="module" src="/app.js"></script>

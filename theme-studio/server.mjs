@@ -15,6 +15,9 @@ import {
 } from "./lib/theme-library.mjs";
 import { getPlatformConfig } from "./lib/platform.mjs";
 import { exportThemeArchive, importThemeArchive } from "./lib/theme-archive.mjs";
+import { discoverPets, findPet, removePet } from "./lib/pet-library.mjs";
+import { readSelectedAvatarId, selectPet } from "./lib/pet-selection.mjs";
+import { activateLivePet } from "./lib/live-pet-selection.mjs";
 import { creatorInstallPaths, provisionCreatorSkill } from "./lib/creator-provisioning.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -160,6 +163,29 @@ function restoreDefaultTheme() {
   return runPlatformScript(platformConfig.restoreScript);
 }
 
+function runCommand(command, args) {
+  return new Promise((resolve, reject) => {
+    const child = spawn(command, args, { stdio: ["ignore", "pipe", "pipe"] });
+    let stderr = "";
+    child.stderr.on("data", (chunk) => { stderr += chunk; });
+    child.on("error", reject);
+    child.on("close", (code) => {
+      if (code === 0) resolve();
+      else reject(new Error(stderr || `${command} failed with code ${code}`));
+    });
+  });
+}
+
+async function restartCodex() {
+  if (!platformConfig.canRestartCodex || process.platform !== "darwin") {
+    throw new Error("当前平台暂不支持由 App 自动重启 Codex。请手动重启后查看宠物。");
+  }
+  await runCommand("osascript", ["-e", 'tell application "ChatGPT" to quit']);
+  await new Promise((resolve) => setTimeout(resolve, 1200));
+  const launcher = spawn("open", ["-a", "ChatGPT"], { detached: true, stdio: "ignore" });
+  launcher.unref();
+}
+
 function injectThemeDir(themeDir, timeoutMs = 8000) {
   if (!platformConfig.canSwitch) {
     throw new Error(platformConfig.switchUnavailableReason);
@@ -218,6 +244,56 @@ async function handleApi(req, res) {
   }
   if (req.method === "GET" && url.pathname === "/api/themes") {
     sendJson(res, 200, { themes: await discoverThemes({ repoRoot, themesRoot: platformConfig.themesRoot }) });
+    return;
+  }
+  if (req.method === "GET" && url.pathname === "/api/pets") {
+    const selectedAvatarId = await readSelectedAvatarId({ configPath: platformConfig.codexConfigPath });
+    const pets = await discoverPets({ petsRoot: platformConfig.petsRoot });
+    sendJson(res, 200, { pets: pets.map((pet) => ({
+      ...pet,
+      isSelected: selectedAvatarId === `custom:${pet.id}`,
+    })) });
+    return;
+  }
+  if (req.method === "GET" && url.pathname === "/api/pet-asset") {
+    const pet = await findPet({ petsRoot: platformConfig.petsRoot, id: url.searchParams.get("id") });
+    const file = path.join(pet.petDir, pet.spritesheetPath);
+    const data = await fs.readFile(file);
+    const ext = path.extname(file).toLowerCase();
+    res.writeHead(200, {
+      "content-type": ext === ".webp" ? "image/webp" : "image/png",
+      "cache-control": "no-store",
+    });
+    res.end(data);
+    return;
+  }
+  if (req.method === "POST" && /^\/api\/pets\/[^/]+\/select$/.test(url.pathname)) {
+    const id = decodeURIComponent(url.pathname.slice("/api/pets/".length, -"/select".length));
+    await findPet({ petsRoot: platformConfig.petsRoot, id });
+    try {
+      const live = await activateLivePet({ id });
+      sendJson(res, 200, { ok: true, activation: "live", ...live });
+    } catch (liveError) {
+      const fallback = await selectPet({ configPath: platformConfig.codexConfigPath, id });
+      sendJson(res, 200, {
+        ok: true,
+        activation: "restart-required",
+        ...fallback,
+        message: "Codex 当前没有可用的实时连接，已保存选择；仅这次需要重启后显示。",
+        liveError: liveError.message,
+      });
+    }
+    return;
+  }
+  if (req.method === "POST" && url.pathname === "/api/restart-codex") {
+    await restartCodex();
+    sendJson(res, 200, { ok: true });
+    return;
+  }
+  if (req.method === "DELETE" && /^\/api\/pets\/[^/]+$/.test(url.pathname)) {
+    const id = decodeURIComponent(url.pathname.slice("/api/pets/".length));
+    await removePet({ petsRoot: platformConfig.petsRoot, id });
+    sendJson(res, 200, { ok: true, id });
     return;
   }
   if (req.method === "GET" && url.pathname === "/api/asset") {

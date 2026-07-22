@@ -1,6 +1,6 @@
 {
   "name": "codex-theme-creator-app",
-  "version": "0.1.2-beta.1",
+  "version": "0.1.3-beta.5",
   "description": "A local Codex Desktop theme library and creator for macOS and Windows.",
   "author": "Codex Theme Creator contributors",
   "private": true,
@@ -17,6 +17,14 @@
     "appId": "com.swordingk.codexthemecreator",
     "productName": "Codex Theme Creator",
     "icon": "build/icon-chatgpt-theme.icns",
+    "fileAssociations": [
+      {
+        "ext": "ctheme",
+        "name": "Codex Theme",
+        "description": "Codex Theme Creator package",
+        "role": "Editor"
+      }
+    ],
     "asar": false,
     "generateUpdatesFilesForAllChannels": true,
     "publish": [

@@ -20,6 +20,9 @@ for (const requiredControl of ["backgroundBlur", "backgroundDim", "homeOpacity",
 assert.match(html, /让 Codex 创作新主题/, "app has a clear Codex creation entry");
 assert.match(html, /id="exportTheme"/, "app can export a selected theme as a portable package");
 assert.match(html, /id="importTheme"/, "app can import a portable theme package");
+assert.match(html, /id="showPets"/, "app has a pet management entry point");
+assert.match(html, /role="tablist"/, "themes and pets are presented as exclusive workspace views");
+assert.match(html, /id="petContent"/, "app has a dedicated pet management view");
 assert.match(html, /安装创作助手/, "app can install the real Codex creation Skill instead of implying a copied prompt is enough");
 assert.match(html, /id="themePreview"/, "app has an in-app theme preview");
 assert.match(html, /用户主题放哪里/, "app explains where user-created themes live");
@@ -31,6 +34,11 @@ assert.match(app, /copyCreatePrompt/, "creation entry copies the Codex prompt");
 assert.match(app, /loadCreatorStatus/, "app checks the creation Skill before offering the Codex prompt");
 assert.match(app, /exportThemePackage/, "app downloads a portable theme package");
 assert.match(app, /importThemePackage/, "app imports a user-selected theme package");
+assert.match(app, /\/api\/pets/, "app reads the local Codex pet library");
+assert.match(app, /removePet/, "app can remove one installed pet package");
+assert.match(app, /selectPet/, "app can make an installed pet the active Codex pet");
+assert.match(app, /restartCodex/, "pet selection gives the user an explicit command to restart Codex and make it visible");
+assert.match(app, /\/api\/pet-asset/, "app renders a real pet sprite instead of a placeholder initial");
 assert.match(app, /applyLocalPreview/, "sliders update the in-app preview immediately");
 assert.doesNotMatch(app, /\/api\/preview/, "sliders should not trigger the unstable Codex live-preview endpoint on every drag");
 assert.match(html, /点击“保存并启用”后才会写入 Codex/, "UI should explain when slider settings reach Codex");
@@ -40,6 +48,7 @@ assert.match(app, /chooseVisibleTheme/, "theme selection should stay on a visibl
 assert.match(app, /preferredIds/, "theme reload should prefer the user's current selection before falling back");
 assert.match(app, /localStorage/, "theme selection and unfinished slider settings should survive an app refresh");
 assert.match(app, /restoreDefaultTheme/, "the default Codex appearance should be a real restore action");
+assert.match(app, /主题已保存，但没有启用/, "apply failures must distinguish saving from live activation");
 assert.match(app, /Codex 默认外观/, "the theme library should expose a return-to-default choice");
 assert.match(html, /首页推荐卡片透明度/, "home opacity should describe the surface it really changes");
 assert.match(html, /任务面板透明度/, "task opacity should describe the surface it really changes");
@@ -50,5 +59,7 @@ assert.match(css, /\.shell\s*\{[\s\S]*height:\s*100vh[\s\S]*overflow:\s*hidden/,
 assert.match(css, /\.workspace\s*\{[\s\S]*height:\s*100vh[\s\S]*overflow:\s*hidden/, "workspace should not grow with background previews");
 assert.match(css, /\.theme-grid\s*\{[\s\S]*overflow:\s*auto/, "only the theme grid should scroll when the list is long");
 assert.match(css, /\.preview-panel\s*\{[\s\S]*aspect-ratio:\s*16\s*\/\s*9/, "preview should preserve a full-window screenshot ratio");
+assert.match(css, /\[hidden\]\s*\{[^}]*display:\s*none\s*!important/, "exclusive workspace views must honor the hidden attribute");
+assert.match(css, /\.pet-art\s*\{[\s\S]*background-size:\s*800%\s+1100%/, "pet cards should show the first frame of the installed sprite atlas");
 
 console.log("PASS: theme studio UI exposes only working MVP controls.");

@@ -16,6 +16,13 @@ assert.match(serverSource, /\/api\/install-creator-skill/, "server should expose
 assert.match(serverSource, /\/api\/quick-switch/, "server should allow the tray to apply bundled presets directly");
 assert.match(serverSource, /\/api\/export/, "server should export a portable theme package");
 assert.match(serverSource, /\/api\/import/, "server should import and validate a portable theme package");
+assert.match(serverSource, /\/api\/pets/, "server should expose the local pet library");
+assert.match(serverSource, /removePet/, "server should delete only one validated pet package");
+assert.match(serverSource, /\/api\/pet-asset/, "server should serve a contained pet sprite for the local UI");
+assert.match(serverSource, /\/select/, "server should allow one installed pet to become the active Codex pet");
+assert.match(serverSource, /activateLivePet/, "pet selection should use Codex's live setting channel before considering a restart");
+assert.match(serverSource, /activation:\s*"live"/, "server should report a confirmed live pet activation separately from fallback state");
+assert.match(serverSource, /\/api\/restart-codex/, "server should offer an explicit user-triggered Codex restart after selecting a pet");
 
 const server = serverModule.createThemeStudioServer();
 assert.equal(typeof server.listen, "function", "factory returns an HTTP server");

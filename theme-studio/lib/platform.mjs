@@ -23,6 +23,9 @@ export function getPlatformConfig({
     platform,
     dataRoot,
     themesRoot: pathImpl.join(dataRoot, "themes"),
+    petsRoot: pathImpl.join(home, ".codex", "pets"),
+    codexConfigPath: pathImpl.join(home, ".codex", "config.toml"),
+    canRestartCodex: false,
     canEditThemes: true,
     canSwitch: false,
     switchScript: null,
@@ -34,6 +37,7 @@ export function getPlatformConfig({
     return {
       ...base,
       label: "macOS",
+      canRestartCodex: true,
       canSwitch: true,
       switchScript: path.join(repoRoot, "engine", "macos", "scripts", "switch-theme-macos.sh"),
       canRestoreDefault: true,
