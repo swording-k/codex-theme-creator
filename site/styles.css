@@ -40,6 +40,8 @@ figcaption { position: absolute; left: 20px; bottom: 18px; font-size: 12px; font
 .platforms p:not(.eyebrow) { max-width: 430px; line-height: 1.7; color: #425266; }
 .platforms a, .platforms span { display: inline-block; margin-top: 16px; color: #0c5e94; font-weight: 750; text-decoration: none; }
 .platforms span { color: #66788e; }
+.windows-actions { display: flex; flex-wrap: wrap; gap: 16px; }
+.windows-actions a { margin-right: 4px; }
 .truth { background: #14273c; }
 .truth p { max-width: 720px; font-size: 17px; }
 @media (max-width: 720px) { .hero { min-height: 86vh; padding-bottom: 48px; } .gallery, .flow, .platforms { grid-template-columns: 1fr; } .nav-actions span { display: none; } figure { min-height: 300px; } .statement, .flow, .truth { padding-top: 64px; padding-bottom: 64px; } .platforms > div { min-height: 0; padding-top: 56px; padding-bottom: 56px; } .download-stat { display: block; margin: 8px 0 0; } }
