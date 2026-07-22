@@ -1,0 +1,97 @@
+name: Publish beta installers
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Desktop App version without the v prefix"
+        required: true
+        default: "0.1.2-beta.1"
+
+permissions:
+  contents: write
+
+jobs:
+  build-windows:
+    name: Build Windows installers
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: desktop-app/package-lock.json
+      - name: Verify release version
+        shell: pwsh
+        run: |
+          $version = (Get-Content desktop-app/package.json | ConvertFrom-Json).version
+          if ($version -ne '${{ inputs.version }}') { throw "package.json version $version does not match requested version" }
+      - run: npm ci --prefix desktop-app
+      - run: npm run dist:win --prefix desktop-app
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-release
+          path: |
+            desktop-app/dist/Codex-Theme-Creator-Setup-${{ inputs.version }}-x64.exe
+            desktop-app/dist/Codex-Theme-Creator-Setup-${{ inputs.version }}-x64.exe.blockmap
+            desktop-app/dist/Codex-Theme-Creator-Setup-${{ inputs.version }}-arm64.exe
+            desktop-app/dist/Codex-Theme-Creator-Setup-${{ inputs.version }}-arm64.exe.blockmap
+            desktop-app/dist/latest.yml
+          if-no-files-found: error
+
+  build-macos:
+    name: Build macOS installer
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: desktop-app/package-lock.json
+      - name: Verify release version
+        run: test "$(node -p \"require('./desktop-app/package.json').version\")" = "${{ inputs.version }}"
+      - run: npm ci --prefix desktop-app
+      - run: npm run dist:mac --prefix desktop-app
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos-release
+          path: |
+            desktop-app/dist/Codex-Theme-Creator-${{ inputs.version }}-arm64.dmg
+            desktop-app/dist/Codex-Theme-Creator-${{ inputs.version }}-arm64.dmg.blockmap
+            desktop-app/dist/Codex-Theme-Creator-${{ inputs.version }}-arm64.zip
+            desktop-app/dist/Codex-Theme-Creator-${{ inputs.version }}-arm64.zip.blockmap
+            desktop-app/dist/latest-mac.yml
+          if-no-files-found: error
+
+  publish:
+    name: Publish GitHub prerelease
+    needs: [build-windows, build-macos]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: release-assets
+          merge-multiple: true
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ inputs.version }}
+          target_commitish: main
+          name: Codex Theme Creator v${{ inputs.version }}
+          prerelease: true
+          draft: false
+          generate_release_notes: false
+          body: |
+            macOS icon update and first Windows test build.
+
+            - macOS Apple Silicon: new ChatGPT theme-manager icon.
+            - Windows ARM64: for Windows virtual machines on Apple Silicon.
+            - Windows x64: for Intel/AMD Windows PCs.
+
+            Windows is a test build. Please verify theme switching, settings, import/export, restore, and the tray menu before treating it as stable.
+          files: release-assets/**
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

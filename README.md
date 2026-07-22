@@ -4,7 +4,7 @@
 
 它不是只换一张壁纸：你可以直接选择内置主题，也可以把一句想法或一张参考图交给 Codex，生成一套可以保存、微调、切换和分享的完整主题。
 
-[打开产品官网](https://swording-k.github.io/codex-theme-creator/) · [下载 macOS Beta](https://github.com/swording-k/codex-theme-creator/releases/download/v0.1.1/Codex-Theme-Creator-0.1.1-arm64.dmg) · [提交问题或建议](https://github.com/swording-k/codex-theme-creator/issues/new?template=feedback.yml)
+[打开产品官网](https://swording-k.github.io/codex-theme-creator/) · [下载 macOS Beta](https://github.com/swording-k/codex-theme-creator/releases/download/v0.1.2-beta.1/Codex-Theme-Creator-0.1.2-beta.1-arm64.dmg) · [提交问题或建议](https://github.com/swording-k/codex-theme-creator/issues/new?template=feedback.yml)
 
 > 当前公开稳定 Beta 支持 Apple 芯片 Mac。Windows 测试版已经提供，等待真实 Windows 设备验证后再转为正式下载。
 
@@ -23,7 +23,7 @@
 
 ### 1. 下载
 
-下载 [macOS Beta（Apple 芯片）](https://github.com/swording-k/codex-theme-creator/releases/download/v0.1.1/Codex-Theme-Creator-0.1.1-arm64.dmg)，打开安装包，把 `Codex Theme Creator.app` 拖进“应用程序”。
+下载 [macOS Beta（Apple 芯片）](https://github.com/swording-k/codex-theme-creator/releases/download/v0.1.2-beta.1/Codex-Theme-Creator-0.1.2-beta.1-arm64.dmg)，打开安装包，把 `Codex Theme Creator.app` 拖进“应用程序”。
 
 当前 Beta 已有开发者签名，但 Apple 最终验证仍在处理中。如果第一次打开出现“Apple 无法验证”：
 

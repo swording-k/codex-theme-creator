@@ -17,7 +17,7 @@ Do not describe a generated image as a complete theme. Do not describe a built i
 ## Public Product State
 
 - Public website: `https://swording-k.github.io/codex-theme-creator/`
-- Public macOS release: `v0.1.1`, Apple silicon only.
+- Public macOS release target: `v0.1.2-beta.1`, Apple silicon only.
 - macOS release is Developer ID signed but not yet Apple-notarized. Gatekeeper can require System Settings → Privacy & Security → Open Anyway.
 - Windows `v0.1.2-beta.1` is a test build. It may be linked as a clearly labelled test download, but must not be described as verified or stable until a real Windows VM pass is recorded.
 - macOS remains the only public stable Beta download. Do not elevate Windows test builds to a public stable release before verification.
