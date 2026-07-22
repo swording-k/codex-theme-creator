@@ -1,0 +1,38 @@
+name: Verify Windows MSI installer
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Desktop App version without the v prefix"
+        required: true
+        default: "0.1.3-beta.5"
+
+permissions:
+  contents: read
+
+jobs:
+  build-windows-msi:
+    name: Build Windows ARM64 MSI for VM verification
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: desktop-app/package-lock.json
+      - name: Verify release version
+        shell: pwsh
+        run: |
+          $version = (Get-Content desktop-app/package.json | ConvertFrom-Json).version
+          if ($version -ne '${{ inputs.version }}') { throw "package.json version $version does not match requested version" }
+      - run: npm ci
+        working-directory: desktop-app
+      - run: npx electron-builder --win msi --arm64 --publish never
+        working-directory: desktop-app
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-msi-${{ inputs.version }}
+          path: desktop-app/dist/Codex-Theme-Creator-${{ inputs.version }}-arm64.msi
+          if-no-files-found: error
