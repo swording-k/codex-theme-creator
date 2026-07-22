@@ -8,6 +8,9 @@ import { exportThemeArchive, importThemeArchive } from "../lib/theme-archive.mjs
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(here, "../..");
+const archiveImplementation = await fs.readFile(path.join(here, "..", "lib", "theme-archive.mjs"), "utf8");
+assert.match(archiveImplementation, /Compress-Archive/, "Windows export uses a native archive command instead of macOS-only zip");
+assert.match(archiveImplementation, /Expand-Archive/, "Windows import uses a native archive command instead of macOS-only unzip");
 const root = await fs.mkdtemp(path.join(os.tmpdir(), "codex-theme-archive-"));
 const themesRoot = path.join(root, "themes");
 const source = path.join(repoRoot, "dream-skin", "preset-porsche-gt3rs");
