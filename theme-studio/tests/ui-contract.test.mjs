@@ -49,6 +49,8 @@ assert.match(app, /preferredIds/, "theme reload should prefer the user's current
 assert.match(app, /localStorage/, "theme selection and unfinished slider settings should survive an app refresh");
 assert.match(app, /restoreDefaultTheme/, "the default Codex appearance should be a real restore action");
 assert.match(app, /主题已保存，但没有启用/, "apply failures must distinguish saving from live activation");
+assert.match(app, /无需另找或下载其他 Codex/, "Windows Store compatibility guidance must not send users looking for a nonexistent alternate Codex download");
+assert.doesNotMatch(app, /官网独立版 Codex/, "Windows compatibility guidance must describe the current product boundary accurately");
 assert.match(app, /Codex 默认外观/, "the theme library should expose a return-to-default choice");
 assert.match(html, /首页推荐卡片透明度/, "home opacity should describe the surface it really changes");
 assert.match(html, /任务面板透明度/, "task opacity should describe the surface it really changes");
