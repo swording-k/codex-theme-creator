@@ -59,6 +59,9 @@ assert.equal(packageJson.build.nsis.oneClick, false, "Windows installer gives us
 assert.equal(packageJson.build.nsis.include, "build/installer.nsh", "Windows installer closes an existing controller before replacing its runtime files");
 const installerScript = await fs.readFile(path.join(appRoot, "build", "installer.nsh"), "utf8");
 assert.match(installerScript, /taskkill \/F \/T \/IM "Codex Theme Creator\.exe"/, "Windows installer closes old Theme Creator processes before extracting a new runtime");
+assert.match(installerScript, /!macro customInstall/, "Windows installer has a post-install migration hook");
+assert.match(installerScript, /CreateShortCut "\$newStartMenuLink" "\$appExe"/, "Windows installer rewrites a stale Start menu shortcut to the newly installed executable");
+assert.match(installerScript, /CreateShortCut "\$newDesktopLink" "\$appExe"/, "Windows installer rewrites a stale desktop shortcut to the newly installed executable");
 await fs.access(path.join(repoRoot, "engine", "windows", "scripts", "switch-theme-windows.ps1"));
 await fs.access(path.join(repoRoot, "engine", "windows", "scripts", "restore-theme-windows.ps1"));
 
