@@ -28,6 +28,8 @@ function Get-ThemeNodeRuntime {
       if (Test-Path -LiteralPath $candidate -PathType Leaf) { return $candidate }
     }
   }
+  $controller = Join-Path (Split-Path $script:RepoRoot -Parent) "Codex Theme Creator.exe"
+  if (Test-Path -LiteralPath $controller -PathType Leaf) { return $controller }
   $command = Get-Command node.exe -ErrorAction SilentlyContinue
   if ($command) { return $command.Source }
   throw "No bundled or system Node runtime was found. Reinstall Codex Theme Creator."

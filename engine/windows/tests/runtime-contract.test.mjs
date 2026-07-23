@@ -23,6 +23,7 @@ assert.match(common, /ChatGPT\.exe|Codex\.exe/, "runtime supports current and le
 assert.match(common, /127\.0\.0\.1/, "runtime binds CDP to loopback only");
 assert.match(common, /remote-debugging-address=127\.0\.0\.1/, "ChatGPT is launched with a loopback-only debugger");
 assert.match(common, /ELECTRON_RUN_AS_NODE/, "the packaged Electron runtime launches the shared Node injector");
+assert.match(common, /Codex Theme Creator\.exe/, "the installed controller provides a Node fallback before Codex has been opened");
 assert.match(common, /Quote-ProcessArgument/, "detached injector arguments remain intact when install paths contain spaces");
 assert.match(common, /stage-theme\.mjs/, "theme switching uses the shared stable package staging implementation");
 assert.match(switcher, /StageThemePath/, "theme switching validates and stages a stable package snapshot");
