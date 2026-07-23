@@ -102,7 +102,7 @@ function Start-ChatGPTWithCdp {
   $executable = Get-ChatGPTExecutable
   $isStorePackaged = Test-StorePackagedCodex -ExecutablePath $executable
   if ($isStorePackaged) {
-    throw "当前安装的是 Microsoft Store 版 Codex。它不会接受主题运行时所需的本地启动参数；为保护你正在进行的对话，本 App 不会关闭 Codex。请改用官网独立安装版 Codex 后再启用主题。"
+    throw "Microsoft Store Codex cannot accept the local runtime launch arguments. Install the standalone Codex app before applying themes."
   }
   Stop-ChatGPTProcesses
   Start-Process -FilePath $executable -ArgumentList @(

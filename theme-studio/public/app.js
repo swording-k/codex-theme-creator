@@ -507,6 +507,14 @@ async function switchTheme() {
   setStatus(`已切换到 ${theme.name}。`);
 }
 
+function readableRuntimeError(error) {
+  const message = error instanceof Error ? error.message : String(error || "");
+  if (message.includes("Microsoft Store Codex cannot accept the local runtime launch arguments")) {
+    return "当前是 Microsoft Store 版 Codex，无法启用主题。请安装官网独立版 Codex 后再试；当前对话不会被关闭。";
+  }
+  return message;
+}
+
 document.querySelector("#refresh").addEventListener("click", loadThemes);
 showPetsButton.addEventListener("click", () => setView("pets"));
 showThemesButton.addEventListener("click", () => setView("themes"));
@@ -524,10 +532,10 @@ document.querySelector("#importFile").addEventListener("change", (event) => {
   event.target.value = "";
 });
 document.querySelector("#applyTheme").addEventListener("click", () => {
-  applyTheme().catch((error) => setStatus("主题已保存，但没有启用：" + error.message));
+  applyTheme().catch((error) => setStatus("主题已保存，但没有启用：" + readableRuntimeError(error)));
 });
 document.querySelector("#switchTheme").addEventListener("click", () => {
-  switchTheme().catch((error) => setStatus("主题没有启用：" + error.message));
+  switchTheme().catch((error) => setStatus("主题没有启用：" + readableRuntimeError(error)));
 });
 controls.addEventListener("input", scheduleLivePreview);
 controls.addEventListener("change", scheduleLivePreview);

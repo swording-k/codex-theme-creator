@@ -13,7 +13,8 @@ const restore = await fs.readFile(path.join(windowsRoot, "scripts", "restore-the
 
 assert.match(common, /Get-AppxPackage/, "runtime discovers the Microsoft Store ChatGPT package");
 assert.match(common, /Test-StorePackagedCodex/, "runtime identifies Store-packaged Codex before reporting a launch failure");
-assert.match(common, /Microsoft Store 版 Codex/, "Store installations receive a clear user-facing compatibility explanation");
+assert.match(common, /Microsoft Store Codex cannot accept the local runtime launch arguments/, "Store installations receive a clear compatibility explanation without PowerShell encoding hazards");
+assert.doesNotMatch(common, /[^\x00-\x7F]/, "Windows PowerShell runtime scripts remain ASCII-only for Windows PowerShell 5.1 compatibility");
 const storeCheck = common.indexOf("Test-StorePackagedCodex -ExecutablePath $executable");
 const storeFailure = common.indexOf("if ($isStorePackaged)", storeCheck);
 const stopCall = common.indexOf("Stop-ChatGPTProcesses", storeCheck);
