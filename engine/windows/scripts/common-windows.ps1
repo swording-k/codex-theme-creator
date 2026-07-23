@@ -124,9 +124,10 @@ function Invoke-ThemeNode {
   $previous = $env:ELECTRON_RUN_AS_NODE
   $env:ELECTRON_RUN_AS_NODE = "1"
   try {
-    & $NodePath @Arguments
-    if ($null -ne $LASTEXITCODE -and $LASTEXITCODE -ne 0) {
-      throw "Theme runtime command failed with exit code $LASTEXITCODE."
+    $argumentLine = $Arguments | ForEach-Object { Quote-ProcessArgument -Value $_ }
+    $process = Start-Process -FilePath $NodePath -ArgumentList ($argumentLine -join " ") -Wait -PassThru -NoNewWindow
+    if ($process.ExitCode -ne 0) {
+      throw "Theme runtime command failed with exit code $($process.ExitCode)."
     }
   } finally {
     $env:ELECTRON_RUN_AS_NODE = $previous
@@ -183,7 +184,7 @@ function Start-ThemeInjector {
 function Publish-StagedTheme {
   param([string]$StageRoot)
   Initialize-ThemeRuntimeDirectories
-  $theme = Get-Content -LiteralPath (Join-Path $StageRoot "theme.json") -Raw | ConvertFrom-Json
+  $theme = Get-Content -LiteralPath (Join-Path $StageRoot "theme.json") -Raw -Encoding UTF8 | ConvertFrom-Json
   $image = [IO.Path]::GetFileName([string]$theme.image)
   if (-not $image -or $image -ne [string]$theme.image) { throw "Theme image must stay inside its package." }
   Copy-Item -LiteralPath (Join-Path $StageRoot $image) -Destination (Join-Path $script:ActiveThemeRoot $image) -Force

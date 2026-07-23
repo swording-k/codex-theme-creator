@@ -1,6 +1,6 @@
 {
   "name": "codex-theme-creator-app",
-  "version": "0.1.3-beta.10",
+  "version": "0.1.3-beta.11",
   "description": "A local Codex Desktop theme library and creator for macOS and Windows.",
   "author": "Codex Theme Creator contributors",
   "private": true,
