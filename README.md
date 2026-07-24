@@ -10,6 +10,12 @@
 
 ![Codex Theme Creator 的 GT 赛车主题效果](media/showcase/01-porsche-gt3rs.jpg)
 
+## 宣传视频
+
+<video src="https://swording-k.github.io/codex-theme-creator/assets/promo.mp4" controls width="100%" poster="https://swording-k.github.io/codex-theme-creator/assets/01-porsche-gt3rs.jpg"></video>
+
+*36 秒看懂：怎么把一句想法变成一套能保存、微调、切换和分享的 Codex 主题。*
+
 ## 这个 App 能做什么
 
 - 一键切换 GT 赛车、星空、训练场等内置主题；
