@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 2,
+  "id": "preset-caishen-readable",
+  "name": "财神清阅",
+  "brandSubtitle": "CODEX DREAM SKIN",
+  "tagline": "明亮招财氛围，左侧留白保障长时间阅读。",
+  "projectPrefix": "选择项目 · ",
+  "projectLabel": "◉  选择项目",
+  "statusText": "FORTUNE MODE READY",
+  "quote": "CLEAR CODE, GOOD FORTUNE",
+  "image": "background.png",
+  "appearance": "light",
+  "art": {
+    "focusX": 0.78,
+    "focusY": 0.45,
+    "safeArea": "left",
+    "taskMode": "ambient"
+  },
+  "colors": {
+    "background": "#fff4e3",
+    "panel": "#fff9ef",
+    "panelAlt": "#f7e7cf",
+    "accent": "#c86b3f",
+    "accentAlt": "#e0a84b",
+    "secondary": "#79a58d",
+    "highlight": "#f6d58a",
+    "text": "#2f231d",
+    "muted": "#7d6a5e",
+    "line": "rgba(200, 107, 63, .22)"
+  },
+  "ui": {
+    "profile": "glass-studio",
+    "density": "comfortable",
+    "radius": 8,
+    "routes": {
+      "home": { "surface": "transparent", "opacity": 0.38 },
+      "task": { "surface": "glass-readable", "opacity": 0.88 }
+    }
+  },
+  "decorations": [
+    { "type": "masthead", "slot": "home-top", "text": "CAISHEN READABLE / FORTUNE DESK", "interactive": false },
+    { "type": "corner-frame", "slot": "shell-corners", "text": "", "interactive": false }
+  ]
+}

@@ -14,3 +14,7 @@
 - `engine/macos/` 中已由其 LICENSE 和 NOTICE 单独覆盖的上游内容。
 
 公开分发包含品牌、人物或受版权保护素材的主题前，发布者必须自行确认相应授权。
+
+`dream-skin/preset-caishen-readable/` 的背景图来自
+[`ChannelerH/codex-skin-packs`](https://github.com/ChannelerH/codex-skin-packs)
+公开发布的 `caishen-readable` 主题包，采用 CC-BY-4.0 许可。
