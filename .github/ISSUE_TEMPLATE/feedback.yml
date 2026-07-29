@@ -18,7 +18,19 @@ body:
     id: version
     attributes:
       label: App version
-      placeholder: "For example: 0.1.1"
+      placeholder: "For example: 0.1.3-beta.14"
+    validations:
+      required: true
+  - type: dropdown
+    id: codex_install
+    attributes:
+      label: Codex installation
+      options:
+        - Microsoft Store Codex
+        - Codex downloaded from OpenAI
+        - I am not sure
+    validations:
+      required: true
   - type: textarea
     id: feedback
     attributes:
@@ -31,3 +43,10 @@ body:
     attributes:
       label: Steps to reproduce
       placeholder: "Open the app, choose a theme, then..."
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Error details or logs
+      description: "Paste the complete error. On Windows, also attach %LOCALAPPDATA%\\CodexDreamSkin\\injector-error.log when it exists. Remove private project names first."
