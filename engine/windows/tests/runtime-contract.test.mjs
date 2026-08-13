@@ -48,6 +48,10 @@ assert.match(runtimeStart, /IApplicationActivationManager|Start-DreamSkinCodex/,
 assert.match(runtimeCommon, /OpenAI\.Codex/, "runtime accepts only the official Codex Store package identity");
 assert.match(runtimeCommon, /ActivateApplication/, "runtime launches Store Codex with its registered application identity");
 assert.match(runtimeInjector, /browser-id/, "runtime injector rejects an unverified browser target");
+assert.match(runtimeInjector, /genericCodexSurface/, "runtime injector accepts the current Codex renderer surface when legacy selectors have changed");
+assert.match(runtimeInjector, /app-shell-header-context-menu-surface/, "runtime injector keeps a stable Codex identity marker for generic renderer detection");
+assert.match(runtimeInjector, /waitForCodexProbe/, "runtime injector waits briefly for the new renderer document instead of spinning until the global timeout");
+assert.match(runtimeInjector, /No page matched the expected Codex shell markers/, "runtime reports the renderer compatibility failure instead of silently succeeding");
 assert.match(runtimeRestore, /Stop-DreamSkinRecordedInjector/, "restore stops the verified background injector");
 assert.match(runtimeTheme, /Invoke-DreamSkinNative/, "metadata validation also supports the packaged Electron Node runtime");
 
