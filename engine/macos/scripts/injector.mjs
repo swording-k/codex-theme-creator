@@ -206,9 +206,9 @@ async function listAppTargets(port) {
 async function probeSession(session) {
   return session.evaluate(`(() => {
     const markers = {
-      shell: Boolean(document.querySelector('main.main-surface')),
+      shell: Boolean(document.querySelector('main')),
       sidebar: Boolean(document.querySelector('aside.app-shell-left-panel')),
-      composer: Boolean(document.querySelector('.composer-surface-chrome')),
+      composer: Boolean(document.querySelector('.ProseMirror')),
       main: Boolean(document.querySelector('[role="main"]')),
     };
     return {
@@ -650,8 +650,12 @@ async function verifySession(session) {
     const visibleCards = cardBoxes.filter((item) => item?.visible);
     const hero = box(home?.firstElementChild?.firstElementChild?.firstElementChild);
     const projectButton = box(home?.querySelector('.group\\\\/project-selector > button'));
-    const shell = box(document.querySelector('main.main-surface'));
-    const composer = box(document.querySelector('.composer-surface-chrome'));
+    const shellEl = [...document.querySelectorAll('main')].find((m) => {
+      const s = getComputedStyle(m);
+      return s.visibility !== 'hidden' && s.display !== 'none' && m.getBoundingClientRect().width > 0;
+    }) || document.querySelector('main');
+    const shell = box(shellEl);
+    const composer = box(document.querySelector('.ProseMirror'));
     const sidebar = box(document.querySelector('aside.app-shell-left-panel'));
     const chrome = document.getElementById('codex-dream-skin-chrome');
     const result = {
@@ -788,7 +792,10 @@ export function earlyPayloadFor(payload, revision) {
     const install = () => {
       if (window[generationKey] !== generation) { stop(); return true; }
       if (!document.documentElement) return false;
-      const shell = document.querySelector('main.main-surface');
+      const shell = [...document.querySelectorAll('main')].find((m) => {
+        const s = getComputedStyle(m);
+        return s.visibility !== 'hidden' && s.display !== 'none' && m.getBoundingClientRect().width > 0;
+      }) || document.querySelector('main');
       const sidebar = document.querySelector('aside.app-shell-left-panel');
       if (!shell || !sidebar) return false;
       stop();

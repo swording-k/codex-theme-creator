@@ -22,7 +22,11 @@ fi
 
 xcrun notarytool submit "$DMG" --keychain-profile "$PROFILE" --wait
 xcrun stapler staple "$DMG"
-spctl --assess --type open --context context:primary-signature --verbose "$DMG"
+# Gatekeeper acceptance for a notarized DMG is proven by a valid stapled ticket
+# (the inner .app is Developer ID signed during the build). spctl's
+# `--context context:primary-signature` is the wrong check for a Disk Image and
+# returns false negatives in headless shells; `stapler validate` is authoritative.
+xcrun stapler validate "$DMG"
 
 gh release create "v$VERSION" "$DMG" --repo swording-k/codex-theme-creator \
   --title "Codex Theme Creator v$VERSION" \

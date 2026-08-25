@@ -81,15 +81,15 @@ export async function probeCodex(endpoint = "http://127.0.0.1:9341") {
     const state = window.__CODEX_DREAM_SKIN_STATE__ || {};
     return {
       counts: {
-        shell: count('main.main-surface, main'),
+        shell: count('main'),
         sidebar: count('aside.app-shell-left-panel'),
-        composer: count('.composer-surface-chrome, .ProseMirror'),
+        composer: count('.ProseMirror'),
         cards: count('.group\\\\/home-suggestions button'),
-        projectSelector: count('.dream-skin-home-shell .composer-surface-chrome, .group\\\\/project-selector'),
-        transcript: count('main.main-surface article, [data-message-author-role], [data-virtualized-turn-content], main.main-surface:not(.dream-skin-home-shell) .prose'),
+        projectSelector: count('.group\\\\/project-selector'),
+        transcript: count('main article, [data-message-author-role], [data-virtualized-turn-content], main:not(.dream-skin-home-shell) .prose'),
         dialogs: count('[role="dialog"], [role="menu"]')
       },
-      route: document.querySelector('main.main-surface.dream-skin-home-shell') ? 'home' : 'task',
+      route: document.querySelector('main.dream-skin-home-shell') ? 'home' : 'task',
       activeThemeId: state.themeId || null,
       runtimeVersion: state.version || null,
       uiProfile: document.documentElement.getAttribute('data-dream-ui-profile'),

@@ -244,7 +244,10 @@
     if (!root.classList.contains("codex-dream-skin")) {
       const samples = [
         body,
-        document.querySelector("main.main-surface"),
+        [...document.querySelectorAll("main")].find((m) => {
+          const s = getComputedStyle(m);
+          return s.visibility !== "hidden" && s.display !== "none" && m.getBoundingClientRect().width > 0;
+        }) || document.querySelector("main"),
         document.querySelector("aside.app-shell-left-panel"),
       ].filter(Boolean);
       let votesLight = 0;
@@ -632,7 +635,10 @@
     const root = document.documentElement;
     if (!root) return;
     shell ||= root.getAttribute(SHELL_ATTR) || resolvedShell();
-    const shellMain = document.querySelector("main.main-surface") || document.querySelector("main");
+    const shellMain = [...document.querySelectorAll("main")].find((m) => {
+      const s = getComputedStyle(m);
+      return s.visibility !== "hidden" && s.display !== "none" && m.getBoundingClientRect().width > 0;
+    }) || document.querySelector("main");
     const homeIndicator = document.querySelector('[data-testid="home-icon"]');
     const home = homeIndicator?.closest('[role="main"]') ||
       [...document.querySelectorAll('[role="main"]')].find((candidate) =>
