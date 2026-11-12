@@ -8,6 +8,7 @@
 - [`preset-porsche-gt3rs`](./preset-porsche-gt3rs/): GT 赛车控制台主题「Porsche GT3 RS」。
 - [`preset-rainforest-focus`](./preset-rainforest-focus/): 雨中森林写代码主题「雨林专注」。
 - [`preset-alpine-lake-desk`](./preset-alpine-lake-desk/): 湖泊雪山写代码主题「雪湖工作台」。
+- [`preset-caishen-readable`](./preset-caishen-readable/): 明亮招财且保留阅读留白的「财神清阅」。
 
 ## 主题要求
 
